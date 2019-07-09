@@ -1,6 +1,5 @@
 local baseUrl = "https://www.wowhead.com/"
-local keybind = "CTRL-C"
-local popupText = "Wowhead %s Link\n" .. keybind .. " to copy"
+local popupText = "Wowhead %s Link\nCTRL-C to copy"
 local tooltipState = {}
 
 
@@ -127,7 +126,7 @@ local function ShowUrlPopup(id, type)
 end
 
 
-function run()
+function runWowheadQuickLink()
     local focus = GetMouseFocus()
     local tooltip = GameTooltip
     local data = {focus = focus, tooltip = tooltip}
