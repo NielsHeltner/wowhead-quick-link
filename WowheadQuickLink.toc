@@ -1,0 +1,6 @@
+## Interface: 80200
+## Title: Wowhead Quick Link
+## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
+## Author: Blur
+
+WowheadQuickLink.lua

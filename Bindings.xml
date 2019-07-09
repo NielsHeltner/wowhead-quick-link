@@ -1,0 +1,5 @@
+<Bindings>
+    <Binding name="WOWHEAD_QUICK_LINK_NAME" header="WOWHEAD_QUICK_LINK_HEADER" category="AddOns" runOnUp="true" default="CTRL-C">
+        run()
+    </Binding>
+</Bindings>
