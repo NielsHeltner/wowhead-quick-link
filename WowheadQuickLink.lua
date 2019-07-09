@@ -74,7 +74,7 @@ end
 
 
 local function GetCompanionFromFocus(data)
-    if not data.focus.petID and not data.focus:GetParent().petID then return end
+    if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
     return select(11, C_PetJournal.GetPetInfoByPetID(petId)), "npc"
 end
@@ -87,7 +87,7 @@ end
 
 
 local function GetCurrencyFromFocus(data)
-    if not data.focus.index and not data.focus:GetParent().index then return end
+    if not data.focus.index and (not data.focus:GetParent() or not data.focus:GetParent().index) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = GetCurrencyListLink(index)
     return GetFromLink(link)
