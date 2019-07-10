@@ -1,11 +1,11 @@
 local addonName, nameSpace = ...
-wowheadQuickLinkBaseUrl = "https://%swowhead.com/%s=%s%s"
+local baseUrl = "https://%swowhead.com/%s=%s%s"
 local popupText = "Wowhead %s Link\nCTRL-C to copy"
 
 
 function GetWowheadQuickLinkUrl(id, type)
     if not (id or type) then return end
-    return string.format(wowheadQuickLinkBaseUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
+    return string.format(baseUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
 end
 
 
@@ -25,7 +25,7 @@ local function GetIdAndType(data)
 end
 
 
-function runWowheadQuickLink()
+function RunWowheadQuickLink()
     local focus = GetMouseFocus()
     local tooltip = GameTooltip
     local data = {focus = focus, tooltip = tooltip}
