@@ -7,4 +7,5 @@
 WowheadQuickLinkConfig.xml
 WowheadQuickLinkConfig.lua
 
+WowheadQuickLinkStrategies.lua
 WowheadQuickLink.lua
