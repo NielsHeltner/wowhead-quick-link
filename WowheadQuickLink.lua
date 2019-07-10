@@ -1,4 +1,4 @@
-local baseUrl = "https://www.wowhead.com/"
+wowheadQuickLinkBaseUrl = "https://%swowhead.com/%s=%s%s"
 local popupText = "Wowhead %s Link\nCTRL-C to copy"
 local tooltipState = {}
 
@@ -119,10 +119,15 @@ local function getIdAndType(data)
 end
 
 
+function GetWowheadQuickLinkUrl(id, type)
+    if not (id or type) then return end
+    return string.format(wowheadQuickLinkBaseUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
+end
+
+
 local function ShowUrlPopup(id, type)
     if not (id or type) then return end
-    local url = baseUrl .. type .. "=" .. id
-    StaticPopup_Show("WowheadQuestLinkUrl", type:sub(1, 1):upper() .. type:sub(2), _, url)
+    StaticPopup_Show("WowheadQuestLinkUrl", type:sub(1, 1):upper() .. type:sub(2), _, GetWowheadQuickLinkUrl(id, type))
 end
 
 
@@ -171,7 +176,3 @@ end
 hookTooltip(GameTooltip)
 hookTooltip(ItemRefTooltip)
 
-
-BINDING_HEADER_WOWHEAD_QUICK_LINK_HEADER = "Wowhead Quick Link"
-BINDING_DESCRIPTION_WOWHEAD_QUICK_LINK_DESC = "Keybind for generating Wowhead link"
-BINDING_NAME_WOWHEAD_QUICK_LINK_NAME = "Generate Wowhead link"

@@ -2,5 +2,9 @@
 ## Title: Wowhead Quick Link
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
 ## Author: Blur
+## SavedVariables: WowheadQuickLinkCfg
+
+WowheadQuickLinkConfig.xml
+WowheadQuickLinkConfig.lua
 
 WowheadQuickLink.lua

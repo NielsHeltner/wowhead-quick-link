@@ -1,0 +1,139 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <EditBox name="WowheadQuickLinkConfig_EditBoxTemplate" letters="20" virtual="true">
+    <Size>
+      <AbsDimension x="120" y="32"></AbsDimension>
+    </Size>
+    <Layers>
+      <Layer level="BACKGROUND">
+        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
+          <Size>
+            <AbsDimension x="75" y="32"></AbsDimension>
+          </Size>
+          <Anchors>
+            <Anchor point="LEFT">
+              <Offset>
+                <AbsDimension x="-10" y="0"></AbsDimension>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.0" right="0.3" top="0" bottom="1.0"></TexCoords>
+        </Texture>
+        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Right">
+          <Size>
+            <AbsDimension x="75" y="32"></AbsDimension>
+          </Size>
+          <Anchors>
+            <Anchor point="RIGHT">
+              <Offset>
+                <AbsDimension x="10" y="0"></AbsDimension>
+              </Offset>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.7" right="1.0" top="0" bottom="1.0"></TexCoords>
+        </Texture>
+      </Layer>
+    </Layers>
+    <FontString inherits="ChatFontNormal"></FontString>
+  </EditBox>
+  <FontString name="WowheadQuickLinkConfig_InputTextTemplate" inherits="GameFontNormalSmall" virtual="true">
+    <Anchors>
+      <Anchor point="TOPLEFT" relativeTo="$parent">
+        <Offset>
+          <AbsDimension x="0" y="10"></AbsDimension>
+        </Offset>
+      </Anchor>
+    </Anchors>
+  </FontString>
+ <Frame name="WowheadQuickLinkConfig_Frame" 
+    toplevel="true" parent="UIParent" frameStrata="DIALOG" 
+    hidden="true" enableMouse="true">
+  <Size><AbsDimension x="330" y="150"/></Size>
+  <Anchors><Anchor point="CENTER"/></Anchors>
+  <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" 
+    edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+    <BackgroundInsets>
+      <AbsInset left="11" right="12" top="12" bottom="11"/>
+    </BackgroundInsets>
+    <TileSize><AbsValue val="32"/></TileSize>
+    <EdgeSize><AbsValue val="32"/></EdgeSize>
+  </Backdrop>
+  <Frames>
+    <EditBox name="WowheadQuickLinkConfig_EditBoxPrefix" inherits="WowheadQuickLinkConfig_EditBoxTemplate">
+      <Anchors>
+        <Anchor point="LEFT">
+          <Offset>
+            <AbsDimension x="30" y="20"></AbsDimension>
+          </Offset>
+        </Anchor>
+      </Anchors>
+    <Layers>
+      <Layer level="OVERLAY">
+        <FontString inherits="WowheadQuickLinkConfig_InputTextTemplate" text="URL Prefix"></FontString>
+      </Layer>
+    </Layers>
+    </EditBox>
+    <EditBox name="WowheadQuickLinkConfig_EditBoxSuffix" inherits="WowheadQuickLinkConfig_EditBoxTemplate">
+      <Anchors>
+        <Anchor point="RIGHT">
+          <Offset>
+            <AbsDimension x="-30" y="20"></AbsDimension>
+          </Offset>
+        </Anchor>
+      </Anchors>
+      <Layers>
+        <Layer level="OVERLAY">
+          <FontString inherits="WowheadQuickLinkConfig_InputTextTemplate" text="URL Suffix"></FontString>
+        </Layer>
+      </Layers>
+    </EditBox>
+    <Button name="WowheadQuickLinkConfig_CloseBtn" inherits="OptionsButtonTemplate" text="Close">
+      <Anchors>
+        <Anchor point="BOTTOM">
+        <Offset><AbsDimension x="0" y="16"/></Offset>
+        </Anchor>
+      </Anchors>
+    </Button>
+  </Frames>
+  <Layers>
+    <Layer level="ARTWORK">
+      <Texture file="Interface\DialogFrame\UI-DialogBox-Header">
+        <Size><AbsDimension x="420" y="64"/></Size>
+        <Anchors>
+          <Anchor point="TOP">
+          <Offset><AbsDimension x="0" y="12"/></Offset>
+          </Anchor>
+        </Anchors>
+      </Texture>
+    </Layer>
+    <Layer level="OVERLAY">
+      <FontString inherits="GameFontNormal" text="Wowhead Quick Link Config">
+        <Anchors>
+          <Anchor point="TOP" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="0" y="-2"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+      <FontString name="WowheadQuickLinkConfig_FinalUrlHeader" inherits="GameFontNormal" text="Final URL">
+        <Anchors>
+          <Anchor point="CENTER" relativeTo="$parent">
+            <Offset>
+              <AbsDimension x="0" y="-10"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+      <FontString name="WowheadQuickLinkConfig_FinalUrlText" inherits="ChatFontNormal" text="www.wowhead.com">
+        <Anchors>
+          <Anchor point="BOTTOM" relativeTo="WowheadQuickLinkConfig_FinalUrlHeader">
+            <Offset>
+              <AbsDimension x="0" y="-15"></AbsDimension>
+            </Offset>
+          </Anchor>
+        </Anchors>
+      </FontString>
+    </Layer>
+  </Layers>
+ </Frame>
+</Ui>
