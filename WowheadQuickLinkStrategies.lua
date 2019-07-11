@@ -75,7 +75,15 @@ end
 function nameSpace.strategies.GetCompanionFromFocus(data)
     if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
-    return select(11, C_PetJournal.GetPetInfoByPetID(petId)), "npc"
+    local id
+    if type(petId) == "string" then
+        id = select(11, C_PetJournal.GetPetInfoByPetID(petId))
+    else
+        id = select(4, C_PetJournal.GetPetInfoBySpeciesID(petId))
+    end
+    return id, "npc"
+end
+
 end
 
 
