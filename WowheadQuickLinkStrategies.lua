@@ -90,6 +90,17 @@ function nameSpace.strategies.GetCompanionFromFloatingTooltip(data)
     return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
 end
 
+
+function nameSpace.strategies.GetItemFromAuctionHouse(data)
+    if not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
+    local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
+    local link = GetAuctionItemLink("list", index)
+    local id, type = GetFromLink(link)
+    if type == "battlepet" then
+        id = select(4, C_PetJournal.GetPetInfoBySpeciesID(id))
+        type = "npc"
+    end
+    return id, type
 end
 
 
