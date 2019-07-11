@@ -86,7 +86,7 @@ end
 
 
 function nameSpace.strategies.GetCurrencyFromFocus(data)
-    if not data.focus.index and (not data.focus:GetParent() or not data.focus:GetParent().index) then return end
+    if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = GetCurrencyListLink(index)
     return GetFromLink(link)
