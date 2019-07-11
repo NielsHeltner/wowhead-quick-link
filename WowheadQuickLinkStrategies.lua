@@ -84,6 +84,12 @@ function nameSpace.strategies.GetCompanionFromFocus(data)
     return id, "npc"
 end
 
+
+function nameSpace.strategies.GetCompanionFromFloatingTooltip(data)
+    if not data.focus.speciesID then return end
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
+end
+
 end
 
 
