@@ -32,11 +32,11 @@ SlashCmdList["WOWHEAD_QUICK_LINK"] = function(message, editBox)
 end
 
 
-WowheadQuickLinkConfig_CloseBtn:SetScript("OnClick", Hide)
-
 WowheadQuickLinkConfig_EditBoxPrefix:SetScript("OnEscapePressed", Hide)
+WowheadQuickLinkConfig_EditBoxPrefix:SetScript("OnEnterPressed", Hide)
 
 WowheadQuickLinkConfig_EditBoxSuffix:SetScript("OnEscapePressed", Hide)
+WowheadQuickLinkConfig_EditBoxSuffix:SetScript("OnEnterPressed", Hide)
 
 
 WowheadQuickLinkConfig_EditBoxPrefix:SetScript("OnTextChanged", function(self)
