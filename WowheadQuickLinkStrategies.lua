@@ -72,6 +72,12 @@ function nameSpace.strategies.GetMountFromFocus(data)
 end
 
 
+function nameSpace.strategies.GetLearntMountFromFocus(data)
+    if not data.focus.mountID then return end
+    return select(2, C_MountJournal.GetMountInfoByID(data.focus.mountID)), "spell"
+end
+
+
 function nameSpace.strategies.GetCompanionFromFocus(data)
     if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
