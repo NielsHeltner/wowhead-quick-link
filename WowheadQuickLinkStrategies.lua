@@ -116,11 +116,23 @@ function nameSpace.strategies.GetFactionFromFocus(data)
 end
 
 
-function nameSpace.strategies.GetCurrencyFromFocus(data)
+function nameSpace.strategies.GetCurrencyInTabFromFocus(data)
     if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = GetCurrencyListLink(index)
     return GetFromLink(link)
+end
+
+
+function nameSpace.strategies.GetCurrencyInVendorFromFocus(data)
+    if not data.focus.itemLink then return end
+    return GetFromLink(data.focus.itemLink)
+end
+
+
+function nameSpace.strategies.GetCurrencyInVendorBottomFromFocus(data)
+    if not data.focus.currencyID then return end
+    return data.focus.currencyID, "currency"
 end
 
 
