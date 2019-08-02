@@ -11,14 +11,20 @@ end
 
 
 function nameSpace.strategies.GetHyperlinkFromTooltip()
-    if not tooltipState.hyperlink then return end
-    return GetFromLink(tooltipState.hyperlink)
+    for _, tooltip in pairs(tooltipState) do
+        if tooltip.hyperlink then
+            return GetFromLink(tooltip.hyperlink)
+        end
+    end
 end
 
 
 function nameSpace.strategies.GetAuraFromTooltip()
-    if not tooltipState.aura then return end
-    return tooltipState.aura, "spell"
+    for _, tooltip in pairs(tooltipState) do
+        if tooltip.aura then
+            return tooltip.aura, "spell"
+        end
+    end
 end
 
 
@@ -137,16 +143,24 @@ end
 
 
 local function HookTooltip(tooltip)
-    hooksecurefunc(tooltip, "SetHyperlink", function(_, hyperlink)
-            tooltipState.hyperlink = hyperlink
+    tooltipState[tooltip] = {}
+    hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
+            tooltipState[tooltip].hyperlink = hyperlink
     end)
-    hooksecurefunc(tooltip, "SetUnitAura", function(_, unit, index, filter)
-            tooltipState.aura = select(10, UnitAura(unit, index, filter))
+    hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
+            tooltipState[tooltip].aura = select(10, UnitAura(unit, index, filter))
     end)
-    tooltip:HookScript("OnTooltipCleared", function(_)
-            tooltipState = {}
+    tooltip:HookScript("OnTooltipCleared", function(tooltip)
+            tooltipState[tooltip] = {}
     end)
 end
 
-HookTooltip(GameTooltip)
-HookTooltip(ItemRefTooltip)
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+frame:SetScript("OnEvent", function(self, event, arg1)
+    if event == "PLAYER_ENTERING_WORLD" then
+        HookTooltip(GameTooltip)
+        HookTooltip(ItemRefTooltip)
+    end
+end)
