@@ -1,25 +1,39 @@
 local addonName, nameSpace = ...
-local baseUrl = "https://%swowhead.com/%s=%s%s"
-local popupText = "Wowhead %s Link\nCTRL-C to copy"
+local baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
+local baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
+local popupText = "%s Link\nCTRL-C to copy"
+local popupStrategies = {}
 
 
-function GetWowheadQuickLinkUrl(id, type)
+function GetWowheadUrl(id, type)
     if not (id or type) then return end
-    return string.format(baseUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
+    return string.format(baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
 end
 
 
-local function ShowUrlPopup(id, type)
-    if not (id or type) then return end
-    StaticPopup_Show("WowheadQuestLinkUrl", type:sub(1, 1):upper() .. type:sub(2), _, GetWowheadQuickLinkUrl(id, type))
+function GetArmoryUrl(locale, realm, name)
+    if not (locale or realm or name) then return end
+    return string.format(baseArmoryUrl, locale, realm, name)
 end
 
 
-local function GetIdAndType(data)
+function popupStrategies.ShowWowheadUrlPopup(data)
+    if not (data.id or data.type) then return end
+    StaticPopup_Show("WowheadQuestLinkUrl", "Wowhead " .. data.type:sub(1, 1):upper() .. data.type:sub(2), _, GetWowheadUrl(data.id, data.type))
+end
+
+
+function popupStrategies.ShowArmoryUrlPopup(data)
+    if not (data.locale or data.realm or data.name) then return end
+    StaticPopup_Show("WowheadQuestLinkUrl", "Armory", _, GetArmoryUrl(data.locale, data.realm, data.name))
+end
+
+
+local function GetDataFromDataSources(dataSources)
     for _, strategy in pairs(nameSpace.strategies) do
-        local id, type = strategy(data)
-        if id and type then
-            return id, type
+        local data = strategy(dataSources)
+        if data then
+            return data
         end
     end
 end
@@ -28,10 +42,14 @@ end
 function RunWowheadQuickLink()
     local focus = GetMouseFocus()
     local tooltip = GameTooltip
-    local data = {focus = focus, tooltip = tooltip}
-    
-    local id, type = GetIdAndType(data)
-    ShowUrlPopup(id, type)
+    local dataSources = {focus = focus, tooltip = tooltip}
+
+    local data = GetDataFromDataSources(dataSources)
+    if data then
+        for _, strategy in pairs(popupStrategies) do
+            strategy(data)
+        end
+    end
 end
 
 
