@@ -25,11 +25,7 @@ function nameSpace.strategies.GetArmoryRealmAndName(dataSources)
 end
 
 
-function armoryStrategies.GetArmoryFromTooltip(data)
-    if not data.tooltip then return end
-    local name, unit = data.tooltip:GetUnit()
-    if not (unit and UnitIsPlayer(unit)) then return end
-    local name, realm = UnitFullName(unit)
+local function GetFromNameAndRealm(name, realm)
     realm = realm or GetRealmName()
     realm = realm:gsub("'", "")
     realm = realm:gsub(" ", "-")
@@ -45,6 +41,21 @@ function armoryStrategies.GetArmoryFromTooltip(data)
     end
     locale = locale:sub(1, 2) .. "-" .. locale:sub(3)
     return locale, realm, name
+end
+
+
+function armoryStrategies.GetArmoryFromTooltip(data)
+    if not data.tooltip then return end
+    local name, unit = data.tooltip:GetUnit()
+    if not (unit and UnitIsPlayer(unit)) then return end
+    return GetFromNameAndRealm(UnitFullName(unit))
+end
+
+
+function armoryStrategies.GetArmoryFromLfgLeader(data)
+    if not data.focus.resultID then return end
+    leader = C_LFGList.GetSearchResultInfo(data.focus.resultID).leaderName
+    return GetFromNameAndRealm(strsplit("-", leader))
 end
 
 
