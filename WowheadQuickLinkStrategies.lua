@@ -1,6 +1,51 @@
 local addonName, nameSpace = ...
 nameSpace.strategies = {}
+local wowheadStrategies = {}
+local armoryStrategies = {}
 local tooltipState = {}
+
+
+function nameSpace.strategies.GetWowheadIdAndType(dataSources)
+    for _, strategy in pairs(wowheadStrategies) do
+        local id, type = strategy(dataSources)
+        if id and type then
+            return {id = id, type = type}
+        end
+    end
+end
+
+
+function nameSpace.strategies.GetArmoryRealmAndName(dataSources)
+    for _, strategy in pairs(armoryStrategies) do
+        local locale, realm, name = strategy(dataSources)
+        if locale and realm and name then
+            return {locale = locale, realm = realm, name = name}
+        end
+    end
+end
+
+
+function armoryStrategies.GetArmoryFromTooltip(data)
+    if not data.tooltip then return end
+    local name, unit = data.tooltip:GetUnit()
+    if not (unit and UnitIsPlayer(unit)) then return end
+    local name, realm = UnitFullName(unit)
+    realm = realm or GetRealmName()
+    realm = realm:gsub("'", "")
+    realm = realm:gsub(" ", "-")
+    local index = realm:find(".%u")
+    if index then
+        realm = realm:sub(1, index) .. "-" .. realm:sub(index + 1)
+    end
+    local region = GetCurrentRegion()
+    local locale = GetLocale()
+    local isEu = region == 3
+    if isEu and locale == "enUS" then
+        locale = "enGB"
+    end
+    locale = locale:sub(1, 2) .. "-" .. locale:sub(3)
+    return locale, realm, name
+end
 
 
 local function GetFromLink(link)
@@ -10,7 +55,7 @@ local function GetFromLink(link)
 end
 
 
-function nameSpace.strategies.GetHyperlinkFromTooltip()
+function wowheadStrategies.GetHyperlinkFromTooltip()
     for _, tooltip in pairs(tooltipState) do
         if tooltip.hyperlink then
             return GetFromLink(tooltip.hyperlink)
@@ -19,7 +64,7 @@ function nameSpace.strategies.GetHyperlinkFromTooltip()
 end
 
 
-function nameSpace.strategies.GetAuraFromTooltip()
+function wowheadStrategies.GetAuraFromTooltip()
     for _, tooltip in pairs(tooltipState) do
         if tooltip.aura then
             return tooltip.aura, "spell"
@@ -28,32 +73,32 @@ function nameSpace.strategies.GetAuraFromTooltip()
 end
 
 
-function nameSpace.strategies.GetItemFromTooltip(data)
+function wowheadStrategies.GetItemFromTooltip(data)
     if not data.tooltip then return end
     local _, link = data.tooltip:GetItem()
     return GetFromLink(link)
 end
 
 
-function nameSpace.strategies.GetSpellFromTooltip(data)
+function wowheadStrategies.GetSpellFromTooltip(data)
     if not data.tooltip then return end
     return select(2, data.tooltip:GetSpell()), "spell"
 end
 
 
-function nameSpace.strategies.GetAchievementFromFocus(data)
+function wowheadStrategies.GetAchievementFromFocus(data)
     if not data.focus.id or not data.focus.dateCompleted then return end
     return data.focus.id, "achievement"
 end
 
 
-function nameSpace.strategies.GetQuestFromFocus(data)
+function wowheadStrategies.GetQuestFromFocus(data)
     if not data.focus.questID then return end
     return data.focus.questID, "quest"
 end
 
 
-function nameSpace.strategies.GetTrackerFromFocus(data)
+function wowheadStrategies.GetTrackerFromFocus(data)
     if not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
@@ -64,7 +109,7 @@ function nameSpace.strategies.GetTrackerFromFocus(data)
 end
 
 
-function nameSpace.strategies.GetNpcFromTooltip(data)
+function wowheadStrategies.GetNpcFromTooltip(data)
     if not data.tooltip then return end
     local _, unit = data.tooltip:GetUnit()
     if not unit then return end
@@ -72,19 +117,19 @@ function nameSpace.strategies.GetNpcFromTooltip(data)
 end
 
 
-function nameSpace.strategies.GetMountFromFocus(data)
+function wowheadStrategies.GetMountFromFocus(data)
     if not data.focus.spellID then return end
     return data.focus.spellID, "spell"
 end
 
 
-function nameSpace.strategies.GetLearntMountFromFocus(data)
+function wowheadStrategies.GetLearntMountFromFocus(data)
     if not data.focus.mountID then return end
     return select(2, C_MountJournal.GetMountInfoByID(data.focus.mountID)), "spell"
 end
 
 
-function nameSpace.strategies.GetCompanionFromFocus(data)
+function wowheadStrategies.GetCompanionFromFocus(data)
     if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
     local id
@@ -97,13 +142,13 @@ function nameSpace.strategies.GetCompanionFromFocus(data)
 end
 
 
-function nameSpace.strategies.GetCompanionFromFloatingTooltip(data)
+function wowheadStrategies.GetCompanionFromFloatingTooltip(data)
     if not data.focus.speciesID then return end
     return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
 end
 
 
-function nameSpace.strategies.GetItemFromAuctionHouse(data)
+function wowheadStrategies.GetItemFromAuctionHouse(data)
     if not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
@@ -116,13 +161,13 @@ function nameSpace.strategies.GetItemFromAuctionHouse(data)
 end
 
 
-function nameSpace.strategies.GetFactionFromFocus(data)
+function wowheadStrategies.GetFactionFromFocus(data)
     if not data.focus.index or not data.focus.standingText then return end
     return select(14, GetFactionInfo(data.focus.index)), "faction"
 end
 
 
-function nameSpace.strategies.GetCurrencyInTabFromFocus(data)
+function wowheadStrategies.GetCurrencyInTabFromFocus(data)
     if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = GetCurrencyListLink(index)
@@ -130,13 +175,13 @@ function nameSpace.strategies.GetCurrencyInTabFromFocus(data)
 end
 
 
-function nameSpace.strategies.GetCurrencyInVendorFromFocus(data)
+function wowheadStrategies.GetCurrencyInVendorFromFocus(data)
     if not data.focus.itemLink then return end
     return GetFromLink(data.focus.itemLink)
 end
 
 
-function nameSpace.strategies.GetCurrencyInVendorBottomFromFocus(data)
+function wowheadStrategies.GetCurrencyInVendorBottomFromFocus(data)
     if not data.focus.currencyID then return end
     return data.focus.currencyID, "currency"
 end

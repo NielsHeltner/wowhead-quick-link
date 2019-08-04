@@ -18,7 +18,7 @@ local function Hide()
 end
 
 local function SetUrl()
-    WowheadQuickLinkConfig_FinalUrlText:SetText(GetWowheadQuickLinkUrl("<id>", "<type>"))
+    WowheadQuickLinkConfig_FinalUrlText:SetText(GetWowheadUrl("<id>", "<type>"))
 end
 
 
