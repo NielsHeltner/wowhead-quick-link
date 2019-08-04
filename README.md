@@ -1,7 +1,7 @@
 # Wowhead Quick Link
-Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link. Allows you to quickly look up anything on Wowhead without having to manually search for it.
+Mouse over and press CTRL-C on (almost) anything to generate a Wowhead or Armory link. Allows you to quickly look up anything on Wowhead without having to manually search for it. Lightweight and efficient.
 
-Supports generating links to the Wowhead page for quests, achievements, items, spells, buffs, NPCs, mounts, battle pets, factions, or currencies by pressing CTRL-C while mousing over.
+Supports generating links to the Wowhead page for quests, achievements, items, spells, buffs, NPCs, mounts, battle pets, factions, or currencies by pressing CTRL-C while mousing over, as well as armory links for player characters.
 
 
-Available as an AddOn: https://www.curseforge.com/wow/addons/wowhead-quick-link and as a WeakAura: https://wago.io/UM1A0XTvx
+Available as an AddOn here: https://www.curseforge.com/wow/addons/wowhead-quick-link
