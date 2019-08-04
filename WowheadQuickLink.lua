@@ -25,7 +25,7 @@ end
 
 function popupStrategies.ShowArmoryUrlPopup(data)
     if not (data.locale or data.realm or data.name) then return end
-    StaticPopup_Show("WowheadQuestLinkUrl", "Armory ", _, GetArmoryUrl(data.locale, data.realm, data.name))
+    StaticPopup_Show("WowheadQuestLinkUrl", "Armory", _, GetArmoryUrl(data.locale, data.realm, data.name))
 end
 
 
