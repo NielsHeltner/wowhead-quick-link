@@ -1,39 +1,23 @@
 local addonName, nameSpace = ...
-local baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
-local baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
+nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
+nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
+nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
+
 local popupText = "%s Link\nCTRL-C to copy"
 local popupStrategies = {}
 
 
-function GetWowheadUrl(id, type)
-    if not (id or type) then return end
-    return string.format(baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
+local function ShowUrlPopup(header, url)
+    StaticPopup_Show("WowheadQuickLinkUrl", header, _, url)
 end
 
 
-function GetArmoryUrl(locale, realm, name)
-    if not (locale or realm or name) then return end
-    return string.format(baseArmoryUrl, locale, realm, name)
-end
-
-
-function popupStrategies.ShowWowheadUrlPopup(data)
-    if not (data.id or data.type) then return end
-    StaticPopup_Show("WowheadQuestLinkUrl", "Wowhead " .. data.type:sub(1, 1):upper() .. data.type:sub(2), _, GetWowheadUrl(data.id, data.type))
-end
-
-
-function popupStrategies.ShowArmoryUrlPopup(data)
-    if not (data.locale or data.realm or data.name) then return end
-    StaticPopup_Show("WowheadQuestLinkUrl", "Armory", _, GetArmoryUrl(data.locale, data.realm, data.name))
-end
-
-
-local function GetDataFromDataSources(dataSources)
+local function CreateUrl(dataSources)
     for _, strategy in pairs(nameSpace.strategies) do
-        local data = strategy(dataSources)
-        if data then
-            return data
+        local header, url = strategy(dataSources)
+        if header and url then
+            ShowUrlPopup(header, url)
+            return
         end
     end
 end
@@ -44,16 +28,11 @@ function RunWowheadQuickLink()
     local tooltip = GameTooltip
     local dataSources = {focus = focus, tooltip = tooltip}
 
-    local data = GetDataFromDataSources(dataSources)
-    if data then
-        for _, strategy in pairs(popupStrategies) do
-            strategy(data)
-        end
-    end
+    CreateUrl(dataSources)
 end
 
 
-StaticPopupDialogs["WowheadQuestLinkUrl"] = {
+StaticPopupDialogs["WowheadQuickLinkUrl"] = {
     text = popupText,
     button1 = "Close", 
     OnShow = function(self, data)
