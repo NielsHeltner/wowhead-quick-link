@@ -227,7 +227,10 @@ end
 function wowheadAzEsStrategies.GetAzEsHyperlinkFromTooltip()
     for _, tooltip in pairs(tooltipState) do
         if tooltip.hyperlink then
-            return select(1, GetFromLink(tooltip.hyperlink))
+            local id, type = GetFromLink(tooltip.hyperlink)
+            if id and not type then
+                return id
+            end
         end
     end
 end
