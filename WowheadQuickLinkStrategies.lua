@@ -1,13 +1,15 @@
 local addonName, nameSpace = ...
 nameSpace.strategies = {}
-local wowheadStrategies = {}
-local wowheadAzEsStrategies = {}
-local armoryStrategies = {}
-local tooltipState = {}
+local strategies = {
+    wowhead = {}, 
+    wowheadAzEs = {}, 
+    armory = {}
+}
+local tooltipStates = {}
 
 
 function nameSpace.strategies.GetWowheadUrl(dataSources)
-    for _, strategy in pairs(wowheadStrategies) do
+    for _, strategy in pairs(strategies.wowhead) do
         local id, type = strategy(dataSources)
         if id and type then
             return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2), 
@@ -18,7 +20,7 @@ end
 
 
 function nameSpace.strategies.GetWowheadAzEsUrl(dataSources)
-    for _, strategy in pairs(wowheadAzEsStrategies) do
+    for _, strategy in pairs(strategies.wowheadAzEs) do
         local id = strategy(dataSources)
         if id then
             return "Wowhead Azerite Essence", 
@@ -29,7 +31,7 @@ end
 
 
 function nameSpace.strategies.GetArmoryUrl(dataSources)
-    for _, strategy in pairs(armoryStrategies) do
+    for _, strategy in pairs(strategies.armory) do
         local locale, realm, name = strategy(dataSources)
         if locale and realm and name then
             return "Armory", string.format(nameSpace.baseArmoryUrl, locale, realm, name)
@@ -57,7 +59,7 @@ local function GetFromNameAndRealm(name, realm)
 end
 
 
-function armoryStrategies.GetArmoryFromTooltip(data)
+function strategies.armory.GetArmoryFromTooltip(data)
     if not data.tooltip then return end
     local name, unit = data.tooltip:GetUnit()
     if not (unit and UnitIsPlayer(unit)) then return end
@@ -65,7 +67,7 @@ function armoryStrategies.GetArmoryFromTooltip(data)
 end
 
 
-function armoryStrategies.GetArmoryFromLfgLeader(data)
+function strategies.armory.GetArmoryFromLfgLeader(data)
     if not data.focus.resultID then return end
     leader = C_LFGList.GetSearchResultInfo(data.focus.resultID).leaderName
     return GetFromNameAndRealm(strsplit("-", leader))
@@ -75,13 +77,13 @@ end
 local function GetFromLink(link)
     if not link then return end
     local _, _, type, id = link:find("%|?H?(%a+):(%d+):")
-    if type == "azessence" then type = nil end
+    if type == "azessence" then return id end
     return id, type
 end
 
 
-function wowheadStrategies.GetHyperlinkFromTooltip()
-    for _, tooltip in pairs(tooltipState) do
+function strategies.wowhead.GetHyperlinkFromTooltip()
+    for _, tooltip in pairs(tooltipStates) do
         if tooltip.hyperlink then
             return GetFromLink(tooltip.hyperlink)
         end
@@ -89,8 +91,8 @@ function wowheadStrategies.GetHyperlinkFromTooltip()
 end
 
 
-function wowheadStrategies.GetAuraFromTooltip()
-    for _, tooltip in pairs(tooltipState) do
+function strategies.wowhead.GetAuraFromTooltip()
+    for _, tooltip in pairs(tooltipStates) do
         if tooltip.aura then
             return tooltip.aura, "spell"
         end
@@ -98,32 +100,32 @@ function wowheadStrategies.GetAuraFromTooltip()
 end
 
 
-function wowheadStrategies.GetItemFromTooltip(data)
+function strategies.wowhead.GetItemFromTooltip(data)
     if not data.tooltip then return end
     local _, link = data.tooltip:GetItem()
     return GetFromLink(link)
 end
 
 
-function wowheadStrategies.GetSpellFromTooltip(data)
+function strategies.wowhead.GetSpellFromTooltip(data)
     if not data.tooltip then return end
     return select(2, data.tooltip:GetSpell()), "spell"
 end
 
 
-function wowheadStrategies.GetAchievementFromFocus(data)
+function strategies.wowhead.GetAchievementFromFocus(data)
     if not data.focus.id or not data.focus.dateCompleted then return end
     return data.focus.id, "achievement"
 end
 
 
-function wowheadStrategies.GetQuestFromFocus(data)
+function strategies.wowhead.GetQuestFromFocus(data)
     if not data.focus.questID then return end
     return data.focus.questID, "quest"
 end
 
 
-function wowheadStrategies.GetTrackerFromFocus(data)
+function strategies.wowhead.GetTrackerFromFocus(data)
     if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
@@ -134,7 +136,7 @@ function wowheadStrategies.GetTrackerFromFocus(data)
 end
 
 
-function wowheadStrategies.GetNpcFromTooltip(data)
+function strategies.wowhead.GetNpcFromTooltip(data)
     if not data.tooltip then return end
     local _, unit = data.tooltip:GetUnit()
     if not unit then return end
@@ -142,19 +144,19 @@ function wowheadStrategies.GetNpcFromTooltip(data)
 end
 
 
-function wowheadStrategies.GetMountFromFocus(data)
+function strategies.wowhead.GetMountFromFocus(data)
     if not data.focus.spellID then return end
     return data.focus.spellID, "spell"
 end
 
 
-function wowheadStrategies.GetLearntMountFromFocus(data)
+function strategies.wowhead.GetLearntMountFromFocus(data)
     if not data.focus.mountID then return end
     return select(2, C_MountJournal.GetMountInfoByID(data.focus.mountID)), "spell"
 end
 
 
-function wowheadStrategies.GetCompanionFromFocus(data)
+function strategies.wowhead.GetCompanionFromFocus(data)
     if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
     local id
@@ -167,13 +169,13 @@ function wowheadStrategies.GetCompanionFromFocus(data)
 end
 
 
-function wowheadStrategies.GetCompanionFromFloatingTooltip(data)
+function strategies.wowhead.GetCompanionFromFloatingTooltip(data)
     if not data.focus.speciesID then return end
     return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
 end
 
 
-function wowheadStrategies.GetItemFromAuctionHouse(data)
+function strategies.wowhead.GetItemFromAuctionHouse(data)
     if not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
@@ -186,13 +188,13 @@ function wowheadStrategies.GetItemFromAuctionHouse(data)
 end
 
 
-function wowheadStrategies.GetFactionFromFocus(data)
+function strategies.wowhead.GetFactionFromFocus(data)
     if not data.focus.index or not data.focus.standingText then return end
     return select(14, GetFactionInfo(data.focus.index)), "faction"
 end
 
 
-function wowheadStrategies.GetCurrencyInTabFromFocus(data)
+function strategies.wowhead.GetCurrencyInTabFromFocus(data)
     if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = GetCurrencyListLink(index)
@@ -200,32 +202,32 @@ function wowheadStrategies.GetCurrencyInTabFromFocus(data)
 end
 
 
-function wowheadStrategies.GetCurrencyInVendorFromFocus(data)
+function strategies.wowhead.GetCurrencyInVendorFromFocus(data)
     if not data.focus.itemLink then return end
     return GetFromLink(data.focus.itemLink)
 end
 
 
-function wowheadStrategies.GetCurrencyInVendorBottomFromFocus(data)
+function strategies.wowhead.GetCurrencyInVendorBottomFromFocus(data)
     if not data.focus.currencyID then return end
     return data.focus.currencyID, "currency"
 end
 
 
-function wowheadAzEsStrategies.GetAzEsFromNeckList(data)
+function strategies.wowheadAzEs.GetAzEsFromNeckList(data)
     if not data.focus.essenceID then return end
     return data.focus.essenceID
 end
 
 
-function wowheadAzEsStrategies.GetAzEsFromNeckSlot(data)
+function strategies.wowheadAzEs.GetAzEsFromNeckSlot(data)
     if not data.focus.milestoneID then return end
     return C_AzeriteEssence.GetMilestoneEssence(data.focus.milestoneID)
 end
 
 
-function wowheadAzEsStrategies.GetAzEsHyperlinkFromTooltip()
-    for _, tooltip in pairs(tooltipState) do
+function strategies.wowheadAzEs.GetAzEsHyperlinkFromTooltip()
+    for _, tooltip in pairs(tooltipStates) do
         if tooltip.hyperlink then
             local id, type = GetFromLink(tooltip.hyperlink)
             if id and not type then
@@ -237,15 +239,15 @@ end
 
 
 local function HookTooltip(tooltip)
-    tooltipState[tooltip] = {}
+    tooltipStates[tooltip] = {}
     hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
-            tooltipState[tooltip].hyperlink = hyperlink
+            tooltipStates[tooltip].hyperlink = hyperlink
     end)
     hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
-            tooltipState[tooltip].aura = select(10, UnitAura(unit, index, filter))
+            tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
     end)
     tooltip:HookScript("OnTooltipCleared", function(tooltip)
-            tooltipState[tooltip] = {}
+            tooltipStates[tooltip] = {}
     end)
 end
 
