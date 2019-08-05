@@ -1,25 +1,38 @@
 local addonName, nameSpace = ...
 nameSpace.strategies = {}
 local wowheadStrategies = {}
+local wowheadAzEsStrategies = {}
 local armoryStrategies = {}
 local tooltipState = {}
 
 
-function nameSpace.strategies.GetWowheadIdAndType(dataSources)
+function nameSpace.strategies.GetWowheadUrl(dataSources)
     for _, strategy in pairs(wowheadStrategies) do
         local id, type = strategy(dataSources)
         if id and type then
-            return {id = id, type = type}
+            return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2), 
+                string.format(nameSpace.baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
         end
     end
 end
 
 
-function nameSpace.strategies.GetArmoryRealmAndName(dataSources)
+function nameSpace.strategies.GetWowheadAzEsUrl(dataSources)
+    for _, strategy in pairs(wowheadAzEsStrategies) do
+        local id = strategy(dataSources)
+        if id then
+            return "Wowhead Azerite Essence", 
+                string.format(nameSpace.baseWowheadAzEsUrl, WowheadQuickLinkCfg.prefix, id, WowheadQuickLinkCfg.suffix)
+        end
+    end
+end
+
+
+function nameSpace.strategies.GetArmoryUrl(dataSources)
     for _, strategy in pairs(armoryStrategies) do
         local locale, realm, name = strategy(dataSources)
         if locale and realm and name then
-            return {locale = locale, realm = realm, name = name}
+            return "Armory", string.format(nameSpace.baseArmoryUrl, locale, realm, name)
         end
     end
 end
@@ -62,6 +75,7 @@ end
 local function GetFromLink(link)
     if not link then return end
     local _, _, type, id = link:find("%|?H?(%a+):(%d+):")
+    if type == "azessence" then type = nil end
     return id, type
 end
 
@@ -110,7 +124,7 @@ end
 
 
 function wowheadStrategies.GetTrackerFromFocus(data)
-    if not data.focus:GetParent() then return end
+    if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
     if parent.module == ACHIEVEMENT_TRACKER_MODULE then
@@ -195,6 +209,27 @@ end
 function wowheadStrategies.GetCurrencyInVendorBottomFromFocus(data)
     if not data.focus.currencyID then return end
     return data.focus.currencyID, "currency"
+end
+
+
+function wowheadAzEsStrategies.GetAzEsFromNeckList(data)
+    if not data.focus.essenceID then return end
+    return data.focus.essenceID
+end
+
+
+function wowheadAzEsStrategies.GetAzEsFromNeckSlot(data)
+    if not data.focus.milestoneID then return end
+    return C_AzeriteEssence.GetMilestoneEssence(data.focus.milestoneID)
+end
+
+
+function wowheadAzEsStrategies.GetAzEsHyperlinkFromTooltip()
+    for _, tooltip in pairs(tooltipState) do
+        if tooltip.hyperlink then
+            return select(1, GetFromLink(tooltip.hyperlink))
+        end
+    end
 end
 
 

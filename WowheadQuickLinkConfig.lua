@@ -1,3 +1,4 @@
+local addonName, nameSpace = ...
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
 
@@ -18,7 +19,7 @@ local function Hide()
 end
 
 local function SetUrl()
-    WowheadQuickLinkConfig_FinalUrlText:SetText(GetWowheadUrl("<id>", "<type>"))
+    WowheadQuickLinkConfig_FinalUrlText:SetText(string.format(nameSpace.baseWowheadUrl, WowheadQuickLinkCfg.prefix, "<type>", "<id>", WowheadQuickLinkCfg.suffix))
 end
 
 
@@ -61,4 +62,3 @@ end)
 BINDING_HEADER_WOWHEAD_QUICK_LINK_HEADER = "Wowhead Quick Link"
 BINDING_DESCRIPTION_WOWHEAD_QUICK_LINK_DESC = "Keybind for generating Wowhead link"
 BINDING_NAME_WOWHEAD_QUICK_LINK_NAME = "Generate Wowhead link"
-
