@@ -110,7 +110,7 @@ end
 
 
 function wowheadStrategies.GetTrackerFromFocus(data)
-    if not data.focus:GetParent() then return end
+    if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
     if parent.module == ACHIEVEMENT_TRACKER_MODULE then
