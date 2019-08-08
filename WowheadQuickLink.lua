@@ -4,7 +4,6 @@ nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
 
 local popupText = "%s Link\nCTRL-C to copy"
-local popupStrategies = {}
 
 
 local function ShowUrlPopup(header, url)
@@ -44,7 +43,7 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         self.editBox:HighlightText(0, self.editBox:GetNumLetters())
     end, 
     hasEditBox = true, 
-    editBoxWidth = 233, 
+    editBoxWidth = 240, 
     timeout = 0, 
     whileDead = true, 
     hideOnEscape = true, 
