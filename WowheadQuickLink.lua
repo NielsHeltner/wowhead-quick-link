@@ -40,7 +40,7 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         self.editBox:SetScript("OnEnterPressed", HidePopup)
         self.editBox:SetMaxLetters(0)
         self.editBox:SetText(data)
-        self.editBox:HighlightText(0, self.editBox:GetNumLetters())
+        self.editBox:HighlightText(0, data:len())
     end, 
     hasEditBox = true, 
     editBoxWidth = 240, 
