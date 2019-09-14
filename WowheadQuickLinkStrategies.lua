@@ -1,11 +1,19 @@
 local addonName, nameSpace = ...
 nameSpace.strategies = {}
+nameSpace.altStrategies = {}
 local strategies = {
     wowhead = {}, 
     wowheadAzEs = {}, 
     armory = {}
 }
 local tooltipStates = {}
+local regions = {
+    [1] = "us", 
+    [2] = "kr", 
+    [3] = "eu", 
+    [4] = "tw", 
+    [5] = "cn"
+}
 
 
 function nameSpace.strategies.GetWowheadUrl(dataSources)
@@ -32,9 +40,19 @@ end
 
 function nameSpace.strategies.GetArmoryUrl(dataSources)
     for _, strategy in pairs(strategies.armory) do
-        local locale, realm, name = strategy(dataSources)
+        local _, locale, realm, name = strategy(dataSources)
         if locale and realm and name then
             return "Armory", string.format(nameSpace.baseArmoryUrl, locale, realm, name)
+        end
+    end
+end
+
+
+function nameSpace.altStrategies.GetRaiderIoUrl(dataSources)
+    for _, strategy in pairs(strategies.armory) do
+        local region, _, realm, name = strategy(dataSources)
+        if region and realm and name then
+            return "Raider.IO", string.format(nameSpace.baseRaiderIoUrl, region, realm, name)
         end
     end
 end
@@ -55,7 +73,7 @@ local function GetFromNameAndRealm(name, realm)
         locale = "enGB"
     end
     locale = locale:sub(1, 2) .. "-" .. locale:sub(3)
-    return locale, realm, name
+    return regions[region], locale, realm, name
 end
 
 

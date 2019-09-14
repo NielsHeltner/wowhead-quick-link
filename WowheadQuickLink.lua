@@ -2,6 +2,7 @@ local addonName, nameSpace = ...
 nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
+nameSpace.baseRaiderIoUrl = "https://raider.io/characters/%s/%s/%s"
 
 local popupText = "%s Link\nCTRL-C to copy"
 
@@ -11,8 +12,8 @@ local function ShowUrlPopup(header, url)
 end
 
 
-local function CreateUrl(dataSources)
-    for _, strategy in pairs(nameSpace.strategies) do
+local function CreateUrl(dataSources, strategies)
+    for _, strategy in pairs(strategies) do
         local header, url = strategy(dataSources)
         if header and url then
             ShowUrlPopup(header, url)
@@ -21,13 +22,20 @@ local function CreateUrl(dataSources)
     end
 end
 
-
-function RunWowheadQuickLink()
+local function GetDataSources()
     local focus = GetMouseFocus()
     local tooltip = GameTooltip
-    local dataSources = {focus = focus, tooltip = tooltip}
+    return {focus = focus, tooltip = tooltip}
+end
 
-    CreateUrl(dataSources)
+
+function RunWowheadQuickLink()
+    CreateUrl(GetDataSources(), nameSpace.strategies)
+end
+
+
+function RunAlternativeQuickLink()
+    CreateUrl(GetDataSources(), nameSpace.altStrategies)
 end
 
 
@@ -40,10 +48,10 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         self.editBox:SetScript("OnEnterPressed", HidePopup)
         self.editBox:SetMaxLetters(0)
         self.editBox:SetText(data)
-        self.editBox:HighlightText(0, data:len())
+        self.editBox:HighlightText(0, self.editBox:GetNumLetters())
     end, 
     hasEditBox = true, 
-    editBoxWidth = 240, 
+    editBoxWidth = 233, 
     timeout = 0, 
     whileDead = true, 
     hideOnEscape = true, 

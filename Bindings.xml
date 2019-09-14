@@ -1,3 +1,4 @@
 <Bindings>
     <Binding name="WOWHEAD_QUICK_LINK_NAME" header="WOWHEAD_QUICK_LINK_HEADER" category="ADDONS" runOnUp="true" default="CTRL-C">RunWowheadQuickLink()</Binding>
+    <Binding name="WOWHEAD_QUICK_LINK_RAIDERIO_NAME" category="ADDONS" runOnUp="true" default="CTRL-SHIFT-C">RunAlternativeQuickLink()</Binding>
 </Bindings>
