@@ -61,7 +61,8 @@ end
 local function GetFromNameAndRealm(name, realm)
     realm = realm or GetRealmName()
     realm = realm:gsub("'", "")
-    realm = realm:gsub(" ", "-")
+    realm = realm:gsub("-", "")
+    realm = realm:gsub(" ", "")
     local index = realm:find(".%u")
     if index then
         realm = realm:sub(1, index) .. "-" .. realm:sub(index + 1)
