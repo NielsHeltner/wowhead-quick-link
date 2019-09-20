@@ -59,7 +59,9 @@ end
 
 
 local function GetFromNameAndRealm(name, realm)
-    realm = realm or GetRealmName()
+    if not realm or realm == '' then
+        realm = GetRealmName()
+    end
     realm = realm:gsub("'", "")
     realm = realm:gsub("-", "")
     realm = realm:gsub(" ", "")
