@@ -210,6 +210,12 @@ function strategies.wowhead.GetItemFromAuctionHouse(data)
 end
 
 
+function strategies.wowhead.GetRecipeFromFocus(data)
+    if not data.focus.tradeSkillInfo then return end
+    return data.focus.tradeSkillInfo.recipeID, "spell"
+end
+
+
 function strategies.wowhead.GetFactionFromFocus(data)
     if not data.focus.index or not data.focus.standingText then return end
     return select(14, GetFactionInfo(data.focus.index)), "faction"
