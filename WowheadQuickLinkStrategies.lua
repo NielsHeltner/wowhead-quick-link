@@ -265,6 +265,9 @@ local function HookTooltip(tooltip)
     hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
             tooltipStates[tooltip].hyperlink = hyperlink
     end)
+    hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
+            tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
+    end)
     hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
             tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
     end)
@@ -273,10 +276,10 @@ local function HookTooltip(tooltip)
     end)
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+local eventHookFrame = CreateFrame("Frame")
+eventHookFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
-frame:SetScript("OnEvent", function(self, event, arg1)
+eventHookFrame:SetScript("OnEvent", function(self, event, arg1)
     if event == "PLAYER_ENTERING_WORLD" then
         HookTooltip(GameTooltip)
         HookTooltip(ItemRefTooltip)
