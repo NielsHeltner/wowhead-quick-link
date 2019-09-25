@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80205
 ## Version: 2.7.0
 ## Title: Wowhead Quick Link
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
