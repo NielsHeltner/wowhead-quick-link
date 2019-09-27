@@ -1,6 +1,6 @@
 local addonName, nameSpace = ...
 nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
-if (select(1, GetBuildInfo()):sub(1, 1) < "2") then
+if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%sclassic.wowhead.com/%s=%s%s"
 end
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"

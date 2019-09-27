@@ -14,6 +14,11 @@ frame:SetScript("OnEvent", function(self, event, arg1)
 end)
 
 
+function IsClassic()
+    return select(1, GetBuildInfo()):sub(1, 1) < "2"
+end
+
+
 local function Hide()
     WowheadQuickLinkConfig_Frame:Hide()
 end

@@ -147,6 +147,15 @@ function strategies.wowhead.GetQuestFromFocus(data)
 end
 
 
+function strategies.wowhead.GetQuestFromClassicLogFocus(data)
+    if not (IsClassic() and data.focus:GetID()) then return end
+    local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
+    local questID = GetQuestIDFromLogIndex(questIndex)
+    if questID == 0 then return end
+    return questID, "quest"
+end
+
+
 function strategies.wowhead.GetTrackerFromFocus(data)
     if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
