@@ -280,9 +280,11 @@ local function HookTooltip(tooltip)
     hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
             tooltipStates[tooltip].hyperlink = hyperlink
     end)
-    hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
-            tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
-    end)
+    if not IsClassic() then
+        hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
+                tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
+        end)
+    end
     hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
             tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
     end)
