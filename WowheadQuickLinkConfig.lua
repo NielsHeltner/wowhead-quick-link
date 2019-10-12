@@ -15,7 +15,7 @@ end)
 
 
 function IsClassic()
-    return select(1, GetBuildInfo()):sub(1, 1) < "2"
+    return select(4, GetBuildInfo()) < 20000
 end
 
 
