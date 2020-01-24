@@ -187,7 +187,7 @@ function strategies.wowhead.GetLearntMountFromFocus(data)
 end
 
 
-function strategies.wowhead.GetCompanionFromFocus(data)
+function strategies.wowhead.GetBattlePetFromFocus(data)
     if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
     local id
@@ -200,7 +200,7 @@ function strategies.wowhead.GetCompanionFromFocus(data)
 end
 
 
-function strategies.wowhead.GetCompanionFromFloatingTooltip(data)
+function strategies.wowhead.GetBattlePetFromFloatingTooltip(data)
     if not data.focus.speciesID then return end
     return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
 end
@@ -219,7 +219,7 @@ function strategies.wowhead.GetItemFromAuctionHouse(data)
 end
 
 
-function strategies.wowhead.GetCompanionFromAuctionHouse(data)
+function strategies.wowhead.GetBattlePetFromAuctionHouse(data)
     if not data.focus.itemKey and (not data.focus.GetRowData or not data.focus:GetRowData().itemKey) then return end
     local itemKey = data.focus.itemKey or data.focus:GetRowData().itemKey
     return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "npc"
