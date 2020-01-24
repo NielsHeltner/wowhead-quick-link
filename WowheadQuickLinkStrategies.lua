@@ -219,10 +219,10 @@ function strategies.wowhead.GetItemFromAuctionHouse(data)
 end
 
 
-function strategies.wowhead.GetCompanionFromAuctionHouseBrowse(data)
-    if not data.focus.GetRowData or not data.focus:GetRowData().itemKey then return end
-    local speciesID = data.focus:GetRowData().itemKey.battlePetSpeciesID
-    return select(4, C_PetJournal.GetPetInfoBySpeciesID(speciesID)), "npc"
+function strategies.wowhead.GetCompanionFromAuctionHouse(data)
+    if not data.focus.itemKey and (not data.focus.GetRowData or not data.focus:GetRowData().itemKey) then return end
+    local itemKey = data.focus.itemKey or data.focus:GetRowData().itemKey
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "npc"
 end
 
 
