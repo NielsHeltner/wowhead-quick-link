@@ -206,8 +206,15 @@ function strategies.wowhead.GetBattlePetFromFloatingTooltip(data)
 end
 
 
-function strategies.wowhead.GetItemFromAuctionHouse(data)
-    if not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
+function strategies.wowhead.GetBattlePetFromAuctionHouse(data)
+    if not data.focus.itemKey and (not data.focus.GetRowData or not data.focus:GetRowData().itemKey) then return end
+    local itemKey = data.focus.itemKey or data.focus:GetRowData().itemKey
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "npc"
+end
+
+
+function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
+    if not IsClassic() and not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)
@@ -216,13 +223,6 @@ function strategies.wowhead.GetItemFromAuctionHouse(data)
         type = "npc"
     end
     return id, type
-end
-
-
-function strategies.wowhead.GetBattlePetFromAuctionHouse(data)
-    if not data.focus.itemKey and (not data.focus.GetRowData or not data.focus:GetRowData().itemKey) then return end
-    local itemKey = data.focus.itemKey or data.focus:GetRowData().itemKey
-    return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "npc"
 end
 
 
