@@ -219,6 +219,13 @@ function strategies.wowhead.GetItemFromAuctionHouse(data)
 end
 
 
+function strategies.wowhead.GetCompanionFromAuctionHouseBrowse(data)
+    if not data.focus.GetRowData or not data.focus:GetRowData().itemKey then return end
+    local speciesID = data.focus:GetRowData().itemKey.battlePetSpeciesID
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(speciesID)), "npc"
+end
+
+
 function strategies.wowhead.GetRecipeFromFocus(data)
     if not data.focus.tradeSkillInfo then return end
     return data.focus.tradeSkillInfo.recipeID, "spell"
