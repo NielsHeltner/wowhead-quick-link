@@ -226,6 +226,14 @@ function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
 end
 
 
+function strategies.wowhead.GetTransmogCollectionItemFromFocus(data)
+    if not data.focus.visualInfo or not WardrobeCollectionFrame.tooltipSourceIndex then return end
+    local selectedAppearance = data.focus.visualInfo.visualID
+    local selectedStyle = WardrobeCollectionFrame.tooltipSourceIndex
+    return WardrobeCollectionFrame_GetSortedAppearanceSources(selectedAppearance)[selectedStyle].itemID, "item"
+end
+
+
 function strategies.wowhead.GetRecipeFromFocus(data)
     if not data.focus.tradeSkillInfo then return end
     return data.focus.tradeSkillInfo.recipeID, "spell"
