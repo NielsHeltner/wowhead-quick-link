@@ -234,6 +234,18 @@ function strategies.wowhead.GetTransmogCollectionItemFromFocus(data)
 end
 
 
+function strategies.wowhead.GetTransmogSetItemFromFocus(data)
+    if not data.focus.sourceID or not WardrobeCollectionFrame.tooltipSourceIndex then return end
+    local selectedAppearance = C_TransmogCollection.GetAppearanceInfoBySource(data.focus.sourceID).appearanceID
+    local selectedStyle = WardrobeCollectionFrame.tooltipSourceIndex
+
+    local appearanceSources = C_TransmogCollection.GetAppearanceSources(selectedAppearance)
+    WardrobeCollectionFrame_SortSources(appearanceSources, appearanceID, data.focus.sourceID)
+
+    return appearanceSources[selectedStyle].itemID, "item"
+end
+
+
 function strategies.wowhead.GetRecipeFromFocus(data)
     if not data.focus.tradeSkillInfo then return end
     return data.focus.tradeSkillInfo.recipeID, "spell"
