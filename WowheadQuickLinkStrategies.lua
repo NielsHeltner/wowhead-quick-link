@@ -91,8 +91,15 @@ end
 
 function strategies.armory.GetArmoryFromLfgLeader(data)
     if not data.focus.resultID then return end
-    leader = C_LFGList.GetSearchResultInfo(data.focus.resultID).leaderName
+    local leader = C_LFGList.GetSearchResultInfo(data.focus.resultID).leaderName
     return GetFromNameAndRealm(strsplit("-", leader))
+end
+
+
+function strategies.armory.GetArmoryFromLfgApplicant(data)
+    if not data.focus.memberIdx or not data.focus:GetParent() or not data.focus:GetParent().applicantID then return end
+    local applicant = select(1, C_LFGList.GetApplicantMemberInfo(data.focus:GetParent().applicantID, data.focus.memberIdx))
+    return GetFromNameAndRealm(strsplit("-", applicant))
 end
 
 
