@@ -1,6 +1,7 @@
 local addonName, nameSpace = ...
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
+frame:RegisterEvent("PLAYER_LOGIN")
 
 frame:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == "WowheadQuickLink" then
@@ -10,9 +11,9 @@ frame:SetScript("OnEvent", function(self, event, arg1)
                 suffix = ""
             }
         end
-
+    elseif event == "PLAYER_LOGIN" then
         -- check if binding setup has run before
-        if WowheadQuickLinkCfg.defaultBindingsSet == nil then
+        if WowheadQuickLinkCfg.default_bindings_set == nil then
             -- hasn't run before, so run it
 
             -- first value is the name attribute of each from Bindings.xml
@@ -26,8 +27,10 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             end
 
             -- prevent setup from running again
-            WowheadQuickLinkCfg.defaultBindingsSet = true
+            WowheadQuickLinkCfg.default_bindings_set = true
         end
+
+        frame:UnregisterEvent("PLAYER_LOGIN")
     end
 end)
 
