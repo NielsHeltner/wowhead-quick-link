@@ -18,7 +18,12 @@ frame:SetScript("OnEvent", function(self, event, arg1)
             -- first value is the name attribute of each from Bindings.xml
             HandleDefaultBindings("WOWHEAD_QUICK_LINK_NAME", "CTRL-C")
             HandleDefaultBindings("WOWHEAD_QUICK_LINK_RAIDERIO_NAME", "CTRL-SHIFT-C")
-            SaveBindings(GetCurrentBindingSet())
+
+            if IsClassic() then
+                AttemptToSaveBindings(GetCurrentBindingSet())
+            else
+                SaveBindings(GetCurrentBindingSet())
+            end
 
             -- prevent setup from running again
             WowheadQuickLinkCfg.defaultBindingsSet = true
