@@ -1,17 +1,50 @@
 local addonName, nameSpace = ...
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
+frame:RegisterEvent("PLAYER_LOGIN")
 
 frame:SetScript("OnEvent", function(self, event, arg1)
     if event == "ADDON_LOADED" and arg1 == "WowheadQuickLink" then
         if WowheadQuickLinkCfg == nil then
             WowheadQuickLinkCfg = {
-                prefix = "", 
+                prefix = "",
                 suffix = ""
             }
         end
+    elseif event == "PLAYER_LOGIN" then
+        -- check if binding setup has run before
+        if WowheadQuickLinkCfg.default_bindings_set == nil then
+            -- hasn't run before, so run it
+
+            -- first value is the name attribute of each from Bindings.xml
+            HandleDefaultBindings("WOWHEAD_QUICK_LINK_NAME", "CTRL-C")
+            HandleDefaultBindings("WOWHEAD_QUICK_LINK_RAIDERIO_NAME", "CTRL-SHIFT-C")
+
+            if IsClassic() then
+                AttemptToSaveBindings(GetCurrentBindingSet())
+            else
+                SaveBindings(GetCurrentBindingSet())
+            end
+
+            -- prevent setup from running again
+            WowheadQuickLinkCfg.default_bindings_set = true
+        end
+
+        frame:UnregisterEvent("PLAYER_LOGIN")
     end
 end)
+
+function HandleDefaultBindings(binding_name, default_key)
+    -- get existing binding info
+    local bind1, bind2 = GetBindingKey(binding_name)
+    local action = GetBindingAction(default_key)
+
+    -- check if binds have been set by the user or the default key is used anywhere else
+    if bind1 == nil and bind2 == nil and action == "" then
+        -- neither bind has been set by the user and the default key isn't in use, so set the default key
+        SetBinding(default_key, binding_name)
+    end
+end
 
 
 function IsClassic()

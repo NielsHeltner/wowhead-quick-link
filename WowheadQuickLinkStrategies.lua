@@ -2,16 +2,16 @@ local addonName, nameSpace = ...
 nameSpace.strategies = {}
 nameSpace.altStrategies = {}
 local strategies = {
-    wowhead = {}, 
-    wowheadAzEs = {}, 
+    wowhead = {},
+    wowheadAzEs = {},
     armory = {}
 }
 local tooltipStates = {}
 local regions = {
-    [1] = "us", 
-    [2] = "kr", 
-    [3] = "eu", 
-    [4] = "tw", 
+    [1] = "us",
+    [2] = "kr",
+    [3] = "eu",
+    [4] = "tw",
     [5] = "cn"
 }
 
@@ -20,7 +20,7 @@ function nameSpace.strategies.GetWowheadUrl(dataSources)
     for _, strategy in pairs(strategies.wowhead) do
         local id, type = strategy(dataSources)
         if id and type then
-            return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2), 
+            return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2),
                 string.format(nameSpace.baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
         end
     end
@@ -31,7 +31,7 @@ function nameSpace.strategies.GetWowheadAzEsUrl(dataSources)
     for _, strategy in pairs(strategies.wowheadAzEs) do
         local id = strategy(dataSources)
         if id then
-            return "Wowhead Azerite Essence", 
+            return "Wowhead Azerite Essence",
                 string.format(nameSpace.baseWowheadAzEsUrl, WowheadQuickLinkCfg.prefix, id, WowheadQuickLinkCfg.suffix)
         end
     end
@@ -221,7 +221,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not IsClassic() and not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex) then return end
+    if not IsClassic() or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)
