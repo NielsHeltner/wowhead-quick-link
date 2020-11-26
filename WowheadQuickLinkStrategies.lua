@@ -268,7 +268,7 @@ end
 function strategies.wowhead.GetCurrencyInTabFromFocus(data)
     if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
-    local link = GetCurrencyListLink(index)
+    local link = C_CurrencyInfo.GetCurrencyListLink(index)
     return GetFromLink(link)
 end
 
