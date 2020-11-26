@@ -20,7 +20,13 @@ function nameSpace.strategies.GetWowheadUrl(dataSources)
     for _, strategy in pairs(strategies.wowhead) do
         local id, type = strategy(dataSources)
         if id and type then
-            return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2),
+            local typeStr
+            if type == "npc" then
+                typeStr = "NPC"
+            else
+                typeStr = type:sub(1, 1):upper() .. type:sub(2)
+            end
+            return "Wowhead " .. typeStr,
                 string.format(nameSpace.baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
         end
     end
@@ -178,7 +184,7 @@ function strategies.wowhead.GetNpcFromTooltip(data)
     if not data.tooltip then return end
     local _, unit = data.tooltip:GetUnit()
     if not unit then return end
-    return select(6, strsplit("-", UnitGUID(unit))), "NPC"
+    return select(6, strsplit("-", UnitGUID(unit))), "npc"
 end
 
 
@@ -203,20 +209,20 @@ function strategies.wowhead.GetBattlePetFromFocus(data)
     else
         id = select(4, C_PetJournal.GetPetInfoBySpeciesID(petId))
     end
-    return id, "NPC"
+    return id, "npc"
 end
 
 
 function strategies.wowhead.GetBattlePetFromFloatingTooltip(data)
     if not data.focus.speciesID then return end
-    return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "NPC"
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(data.focus.speciesID)), "npc"
 end
 
 
 function strategies.wowhead.GetBattlePetFromAuctionHouse(data)
     if not data.focus.itemKey and (not data.focus.GetRowData or not data.focus:GetRowData().itemKey) then return end
     local itemKey = data.focus.itemKey or data.focus:GetRowData().itemKey
-    return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "NPC"
+    return select(4, C_PetJournal.GetPetInfoBySpeciesID(itemKey.battlePetSpeciesID)), "npc"
 end
 
 
@@ -227,7 +233,7 @@ function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
     local id, type = GetFromLink(link)
     if type == "battlepet" then
         id = select(4, C_PetJournal.GetPetInfoBySpeciesID(id))
-        type = "NPC"
+        type = "npc"
     end
     return id, type
 end
