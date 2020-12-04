@@ -22,7 +22,7 @@ function nameSpace.strategies.GetWowheadUrl(dataSources)
         if id and type then
             local typeStr
             if type == "npc" then
-                typeStr = "NPC"
+                typeStr = type:upper()
             else
                 typeStr = type:sub(1, 1):upper() .. type:sub(2)
             end
