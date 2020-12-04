@@ -20,7 +20,13 @@ function nameSpace.strategies.GetWowheadUrl(dataSources)
     for _, strategy in pairs(strategies.wowhead) do
         local id, type = strategy(dataSources)
         if id and type then
-            return "Wowhead " .. type:sub(1, 1):upper() .. type:sub(2),
+            local typeStr
+            if type == "npc" then
+                typeStr = "NPC"
+            else
+                typeStr = type:sub(1, 1):upper() .. type:sub(2)
+            end
+            return "Wowhead " .. typeStr,
                 string.format(nameSpace.baseWowheadUrl, WowheadQuickLinkCfg.prefix, type, id, WowheadQuickLinkCfg.suffix)
         end
     end
@@ -268,7 +274,7 @@ end
 function strategies.wowhead.GetCurrencyInTabFromFocus(data)
     if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
     local index = data.focus.index or data.focus:GetParent().index
-    local link = GetCurrencyListLink(index)
+    local link = C_CurrencyInfo.GetCurrencyListLink(index)
     return GetFromLink(link)
 end
 
