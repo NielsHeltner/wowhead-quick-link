@@ -290,6 +290,18 @@ function strategies.wowhead.GetCurrencyInVendorBottomFromFocus(data)
     return data.focus.currencyID, "currency"
 end
 
+function strategies.wowhead.GetConduitFromTree(data)
+    if not data.focus.GetConduitID or data.focus:GetConduitID() == 0 then return end
+    local conduitID = data.focus:GetConduitID()
+    local conduitData = C_Soulbinds.GetConduitCollectionData(conduitID)
+    return conduitData.conduitItemID, "item"
+end
+
+function strategies.wowhead.GetConduitFromList(data)
+    if not data.focus.conduitData then return end
+    return data.focus.conduitData.conduitItemID, "item"
+end
+
 
 function strategies.wowheadAzEs.GetAzEsFromNeckList(data)
     if not data.focus.essenceID then return end
