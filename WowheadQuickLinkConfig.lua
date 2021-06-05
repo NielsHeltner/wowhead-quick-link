@@ -47,8 +47,18 @@ function HandleDefaultBindings(binding_name, default_key)
 end
 
 
+function IsRetail()
+    return WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
+end
+
+
 function IsClassic()
-    return select(4, GetBuildInfo()) < 20000
+    return WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+end
+
+
+function IsBCC()
+    return WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 end
 
 
