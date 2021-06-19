@@ -45,20 +45,24 @@ end
 
 
 function nameSpace.strategies.GetArmoryUrl(dataSources)
-    for _, strategy in pairs(strategies.armory) do
-        local _, locale, realm, name = strategy(dataSources)
-        if locale and realm and name then
-            return "Armory", string.format(nameSpace.baseArmoryUrl, locale, realm, name)
+    if IsRetail() then
+        for _, strategy in pairs(strategies.armory) do
+            local _, locale, realm, name = strategy(dataSources)
+            if locale and realm and name then
+                return "Armory", string.format(nameSpace.baseArmoryUrl, locale, realm, name)
+            end
         end
     end
 end
 
 
 function nameSpace.altStrategies.GetRaiderIoUrl(dataSources)
-    for _, strategy in pairs(strategies.armory) do
-        local region, _, realm, name = strategy(dataSources)
-        if region and realm and name then
-            return "Raider.IO", string.format(nameSpace.baseRaiderIoUrl, region, realm, name)
+    if IsRetail() then
+        for _, strategy in pairs(strategies.armory) do
+            local region, _, realm, name = strategy(dataSources)
+            if region and realm and name then
+                return "Raider.IO", string.format(nameSpace.baseRaiderIoUrl, region, realm, name)
+            end
         end
     end
 end
@@ -161,11 +165,17 @@ end
 
 
 function strategies.wowhead.GetQuestFromClassicLogFocus(data)
-    if not (IsClassic() and data.focus:GetID()) then return end
+    if not ((IsClassic() or IsBCC()) and data.focus.Text and data.focus:GetID()) then return end
     local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
     local questID = GetQuestIDFromLogIndex(questIndex)
     if questID == 0 then return end
     return questID, "quest"
+end
+
+
+function strategies.wowhead.GetQuestFromQuestieTracker(data)
+    if not ((IsClassic() or IsBCC()) and data.focus.Quest) then return end
+    return data.focus.Quest.Id, "quest"
 end
 
 
@@ -227,7 +237,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not IsClassic() or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
+    if not (IsClassic() or IsBCC()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)
@@ -332,7 +342,7 @@ local function HookTooltip(tooltip)
     hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
             tooltipStates[tooltip].hyperlink = hyperlink
     end)
-    if not IsClassic() then
+    if IsRetail() then
         hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
                 tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
         end)

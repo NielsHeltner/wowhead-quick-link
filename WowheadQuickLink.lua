@@ -1,7 +1,12 @@
 local addonName, nameSpace = ...
-nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
+if IsRetail() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
+end
 if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%sclassic.wowhead.com/%s=%s%s"
+end
+if IsBCC() then
+    nameSpace.baseWowheadUrl = "https://%stbc.wowhead.com/%s=%s%s"
 end
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"
@@ -44,7 +49,7 @@ end
 
 StaticPopupDialogs["WowheadQuickLinkUrl"] = {
     text = popupText,
-    button1 = "Close", 
+    button1 = "Close",
     OnShow = function(self, data)
         local function HidePopup(self) self:GetParent():Hide() end
         self.editBox:SetScript("OnEscapePressed", HidePopup)
@@ -55,11 +60,11 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         self.editBox:SetMaxLetters(0)
         self.editBox:SetText(data)
         self.editBox:HighlightText()
-    end, 
-    hasEditBox = true, 
-    editBoxWidth = 240, 
-    timeout = 0, 
-    whileDead = true, 
-    hideOnEscape = true, 
-    preferredIndex = 3, 
+    end,
+    hasEditBox = true,
+    editBoxWidth = 240,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
 }

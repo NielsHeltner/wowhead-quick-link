@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 20501
 ## Version: 2.10.1
 ## Title: Wowhead Quick Link
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
