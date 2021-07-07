@@ -6,6 +6,7 @@
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
 ## Author: Blur
 ## SavedVariables: WowheadQuickLinkCfg
+## X-Curse-Project-ID: 326804
 
 WowheadQuickLinkConfig.xml
 WowheadQuickLinkConfig.lua
