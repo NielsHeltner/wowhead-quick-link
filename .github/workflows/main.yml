@@ -1,0 +1,45 @@
+# Packages the addon for all three versions of WoW using the BigWigs packager
+# https://github.com/BigWigsMods/packager
+
+name: Package and release to CurseForge
+
+# Run when a version is tagged
+on:
+  push:
+    tags:
+      - '**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Clone project
+        uses: actions/checkout@v1
+
+      # Package/release for retail
+      - name: Package and release for retail
+        uses: BigWigsMods/packager@v1
+        with:
+          args: -g retail
+
+      # Package/release for BCC
+      - name: Package/release for BCC
+        uses: BigWigsMods/packager@v1
+        with:
+          args: -g bcc
+
+      # Package/release for classic
+      - name: Package/release for classic
+        uses: BigWigsMods/packager@v1
+        with:
+          args: -g classic
