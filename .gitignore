@@ -1,3 +1,6 @@
+# used for testing BigWigsMods/packager releases locally
+.release/
+
 # Compiled Lua sources
 luac.out
 
