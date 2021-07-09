@@ -1,3 +1,4 @@
 ignore:
-  - "README.md"
-  - "LICENSE.md"
+  - README.md
+  - LICENSE.md
+  - classic/*

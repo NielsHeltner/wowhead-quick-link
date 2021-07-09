@@ -1,0 +1,6 @@
+move-folders:
+  WowheadQuickLink/classic: WowheadQuickLink
+
+ignore:
+  - README.md
+  - LICENSE.md
