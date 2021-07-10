@@ -183,7 +183,8 @@ function strategies.wowhead.GetTrackerFromFocus(data)
     if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
-    if parent.module == ACHIEVEMENT_TRACKER_MODULE or string.find(data.focus:GetName(), "^AchievementFrameCriteria") ~= nil then
+    local focusName = data.focus:GetName()
+    if parent.module == ACHIEVEMENT_TRACKER_MODULE or (focusName ~= nil and string.find(focusName, "^AchievementFrameCriteria") ~= nil) then
         return id, "achievement"
     end
     return id, "quest"
