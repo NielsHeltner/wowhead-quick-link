@@ -184,7 +184,10 @@ function strategies.wowhead.GetTrackerFromFocus(data)
     local parent = data.focus:GetParent()
     local id = data.focus.id or parent.id
     local focusName = data.focus:GetName()
-    if parent.module == ACHIEVEMENT_TRACKER_MODULE or (focusName ~= nil and string.find(focusName, "^AchievementFrameCriteria") ~= nil) then
+    if parent.module == ACHIEVEMENT_TRACKER_MODULE or
+        (focusName ~= nil and string.find(focusName, "^AchievementFrameCriteria") ~= nil) or
+        -- support Kaliel's Tracker
+        (data.focus.module ~= nil and data.focus.module.friendlyName == "ACHIEVEMENT_TRACKER_MODULE") then
         return id, "achievement"
     end
     return id, "quest"
