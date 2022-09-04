@@ -1,7 +1,4 @@
 <Bindings>
     <Binding name="WOWHEAD_QUICK_LINK_NAME" header="WOWHEAD_QUICK_LINK_HEADER" category="ADDONS">RunWowheadQuickLink()</Binding>
-    <!-- BigWigs packager uses these comments to only include this keybind in retail builds -->
-    <!--@version-retail@-->
     <Binding name="WOWHEAD_QUICK_LINK_RAIDERIO_NAME" category="ADDONS">RunAlternativeQuickLink()</Binding>
-    <!--@end-version-retail@-->
 </Bindings>
