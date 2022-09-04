@@ -1,4 +1,4 @@
-## Interface-Retail: 90207
+## Interface: 90207
 ## Interface-Wrath: 30400
 ## Interface-Classic: 11403
 ## Version: 2.13.9
