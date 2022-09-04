@@ -165,7 +165,7 @@ end
 
 
 function strategies.wowhead.GetQuestFromClassicLogFocus(data)
-    if not ((IsClassic() or IsBCC()) and data.focus.Text and data.focus:GetID()) then return end
+    if not ((IsClassic() or IsWrath()) and data.focus.normalText and data.focus:GetID()) then return end
     local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
     local questID = GetQuestIDFromLogIndex(questIndex)
     if questID == 0 then return end
@@ -174,7 +174,7 @@ end
 
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsBCC()) and data.focus.Quest) then return end
+    if not ((IsClassic() or IsWrath()) and data.focus.Quest) then return end
     return data.focus.Quest.Id, "quest"
 end
 
@@ -241,7 +241,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not (IsClassic() or IsBCC()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
+    if not (IsClassic() or IsWrath()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)

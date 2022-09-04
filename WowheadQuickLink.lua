@@ -5,8 +5,8 @@ end
 if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%sclassic.wowhead.com/%s=%s%s"
 end
-if IsBCC() then
-    nameSpace.baseWowheadUrl = "https://%stbc.wowhead.com/%s=%s%s"
+if IsWrath() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/wotlk/%s=%s%s"
 end
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"

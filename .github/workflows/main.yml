@@ -1,4 +1,4 @@
-# Packages the addon for all three versions of WoW using the BigWigs packager
+# Packages the addon for all versions of WoW using the BigWigs packager
 # https://github.com/BigWigsMods/packager
 
 name: Package and release to CurseForge
@@ -36,7 +36,7 @@ jobs:
       - name: Package/release for BCC
         uses: BigWigsMods/packager@v1
         with:
-          args: -g bcc
+          args: -g wrath
 
       # Package/release for classic
       - name: Package/release for classic

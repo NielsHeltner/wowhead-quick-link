@@ -57,8 +57,8 @@ function IsClassic()
 end
 
 
-function IsBCC()
-    return WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+function IsWrath()
+    return WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 end
 
 
