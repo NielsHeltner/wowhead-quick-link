@@ -34,14 +34,33 @@
     </Anchors>
   </FontString>
 
+  <!--@version-retail@-->
   <Frame name="WowheadQuickLinkConfig_Frame" toplevel="true" parent="UIParent" frameStrata="DIALOG" hidden="true" enableMouse="true" movable="true" inherits="BackdropTemplate">
+  <!--@end-version-retail@-->
+  <!--@version-classic@-->
+  <Frame name="WowheadQuickLinkConfig_Frame" toplevel="true" parent="UIParent" frameStrata="DIALOG" hidden="true" enableMouse="true" movable="true">
+  <!--@end-version-classic@-->
   <Size><AbsDimension x="330" y="150"/></Size>
   <Anchors><Anchor point="CENTER"/></Anchors>
+  <!--@version-retail@-->
   <KeyValues>
     <KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global"/>
   </KeyValues>
+  <!--@end-version-retail@-->
+  <!--@version-classic@-->
+  <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+    <BackgroundInsets><AbsInset left="11" right="12" top="12" bottom="11"/></BackgroundInsets>
+    <TileSize><AbsValue val="32"/></TileSize>
+    <EdgeSize><AbsValue val="32"/></EdgeSize>
+  </Backdrop>
+  <!--@end-version-classic@-->
   <Scripts>
+    <!--@version-retail@-->
     <OnLoad inherit="prepend">self:RegisterForDrag("LeftButton");</OnLoad>
+    <!--@end-version-retail@-->
+    <!--@version-classic@-->
+    <OnLoad>self:RegisterForDrag("LeftButton");</OnLoad>
+    <!--@end-version-classic@-->
     <OnDragStart>self:StartMoving();</OnDragStart>
     <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
   </Scripts>

@@ -24,22 +24,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Clone project
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       # Package/release for retail
-      - name: Package and release for retail
-        uses: BigWigsMods/packager@v1
-        with:
-          args: -g retail
-
-      # Package/release for BCC
-      - name: Package/release for BCC
-        uses: BigWigsMods/packager@v1
-        with:
-          args: -g wrath
-
-      # Package/release for classic
-      - name: Package/release for classic
-        uses: BigWigsMods/packager@v1
-        with:
-          args: -g classic -m .pkgmeta-classic
+      - name: Package and release
+        uses: BigWigsMods/packager@v2
