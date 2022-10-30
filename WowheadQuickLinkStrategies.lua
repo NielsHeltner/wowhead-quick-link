@@ -152,8 +152,10 @@ function strategies.wowhead.GetSpellFromTooltip(data)
 end
 
 
+-- gets achievement link from the main achievements window
 function strategies.wowhead.GetAchievementFromFocus(data)
-    if not data.focus.id or not data.focus.dateCompleted then return end
+    -- retail uses DateCompleted, classic uses dateCompleted
+    if not data.focus.id or not (data.focus.DateCompleted or data.focus.dateCompleted) then return end
     return data.focus.id, "achievement"
 end
 
