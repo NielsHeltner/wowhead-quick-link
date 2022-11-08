@@ -346,18 +346,23 @@ end
 local function HookTooltip(tooltip)
     tooltipStates[tooltip] = {}
     hooksecurefunc(tooltip, "SetHyperlink", function(tooltip, hyperlink)
-            tooltipStates[tooltip].hyperlink = hyperlink
+        tooltipStates[tooltip].hyperlink = hyperlink
     end)
+
     if IsRetail() then
         hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
+            if C_TradeSkillUI.GetRecipeReagentItemLink then
                 tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
+            end
         end)
     end
+
     hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
-            tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
+        tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
     end)
+
     tooltip:HookScript("OnTooltipCleared", function(tooltip)
-            tooltipStates[tooltip] = {}
+        tooltipStates[tooltip] = {}
     end)
 end
 
