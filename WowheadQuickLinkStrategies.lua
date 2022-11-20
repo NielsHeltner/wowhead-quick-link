@@ -152,6 +152,23 @@ function strategies.wowhead.GetSpellFromTooltip(data)
 end
 
 
+-- data type ID comes from the TooltipDataType enum in blizzard's lua:
+-- https://github.com/Gethe/wow-ui-source/blob/live/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
+function strategies.wowhead.GetMountOrToyFromTooltip(data)
+    if not data.tooltip then return end
+    tooltipData = data.tooltip:GetTooltipData()
+    if not tooltipData then return end
+
+    if tooltipData.type == Enum.TooltipDataType.Mount and tooltipData.id then
+        return select(2, C_MountJournal.GetMountInfoByID(tooltipData.id)), "spell"
+    end
+
+    if tooltipData.type == Enum.TooltipDataType.Toy then
+        return tooltipData.id, "item"
+    end
+end
+
+
 -- gets achievement link from the main achievements window
 function strategies.wowhead.GetAchievementFromFocus(data)
     -- retail uses DateCompleted, classic uses dateCompleted
@@ -262,11 +279,17 @@ function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
 end
 
 
+function strategies.wowhead.GetToyCollectionItemFromFocus(data)
+    if not data.focus.itemID then return end
+    return data.focus.itemID, "item"
+end
+
+
 function strategies.wowhead.GetTransmogCollectionItemFromFocus(data)
     if not data.focus.visualInfo or not WardrobeCollectionFrame.tooltipSourceIndex then return end
     local selectedAppearance = data.focus.visualInfo.visualID
     local selectedStyle = WardrobeCollectionFrame.tooltipSourceIndex
-    return WardrobeCollectionFrame_GetSortedAppearanceSources(selectedAppearance)[selectedStyle].itemID, "item"
+    return CollectionWardrobeUtil.GetSortedAppearanceSources(selectedAppearance)[selectedStyle].itemID, "item"
 end
 
 
@@ -276,7 +299,7 @@ function strategies.wowhead.GetTransmogSetItemFromFocus(data)
     local selectedStyle = WardrobeCollectionFrame.tooltipSourceIndex
 
     local appearanceSources = C_TransmogCollection.GetAppearanceSources(selectedAppearance)
-    WardrobeCollectionFrame_SortSources(appearanceSources, appearanceID, data.focus.sourceID)
+    CollectionWardrobeUtil.SortSources(appearanceSources, appearanceID, data.focus.sourceID)
 
     return appearanceSources[selectedStyle].itemID, "item"
 end
