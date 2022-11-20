@@ -160,6 +160,13 @@ function strategies.wowhead.GetAchievementFromFocus(data)
 end
 
 
+-- gets achievement link when using Krowi's Achievement Filter
+function strategies.wowhead.GetKrowisAchievementFromFocus(data)
+    if not data.focus.Achievement or not data.focus.Achievement.ID then return end
+    return data.focus.Achievement.ID, "achievement"
+end
+
+
 function strategies.wowhead.GetQuestFromFocus(data)
     if not data.focus.questID then return end
     return data.focus.questID, "quest"
