@@ -155,7 +155,7 @@ end
 -- data type ID comes from the TooltipDataType enum in blizzard's lua:
 -- https://github.com/Gethe/wow-ui-source/blob/live/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
 function strategies.wowhead.GetMountOrToyFromTooltip(data)
-    if not data.tooltip then return end
+    if not IsRetail() or not data.tooltip then return end
     tooltipData = data.tooltip:GetTooltipData()
     if not tooltipData then return end
 
@@ -163,7 +163,7 @@ function strategies.wowhead.GetMountOrToyFromTooltip(data)
         return select(2, C_MountJournal.GetMountInfoByID(tooltipData.id)), "spell"
     end
 
-    if tooltipData.type == Enum.TooltipDataType.Toy then
+    if tooltipData.type == Enum.TooltipDataType.Toy and tooltipData.id then
         return tooltipData.id, "item"
     end
 end
