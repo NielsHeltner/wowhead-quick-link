@@ -1,6 +1,6 @@
 ## Interface: 100002
-## Interface-Wrath: 30400
-## Version: 2.15.0
+## Interface-Wrath: 30401
+## Version: 2.15.1
 ## Title: Wowhead Quick Link
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
 ## Author: Blur
