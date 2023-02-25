@@ -179,8 +179,8 @@ end
 
 -- gets achievement link when using Krowi's Achievement Filter
 function strategies.wowhead.GetKrowisAchievementFromFocus(data)
-    if not data.focus.Achievement or not data.focus.Achievement.ID then return end
-    return data.focus.Achievement.ID, "achievement"
+    if not data.focus.Achievement or not data.focus.Achievement.Id then return end
+    return data.focus.Achievement.Id, "achievement"
 end
 
 
