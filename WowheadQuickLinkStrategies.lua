@@ -4,6 +4,7 @@ nameSpace.altStrategies = {}
 local strategies = {
     wowhead = {},
     wowheadAzEs = {},
+    wowheadTradingPostActivity = {},
     armory = {}
 }
 local tooltipStates = {}
@@ -43,6 +44,15 @@ function nameSpace.strategies.GetWowheadAzEsUrl(dataSources)
     end
 end
 
+function nameSpace.strategies.GetWowheadTradingPostActivityUrl(dataSources)
+    for _, strategy in pairs(strategies.wowheadTradingPostActivity) do
+        local id = strategy(dataSources)
+        if id then
+            return "Wowhead Trading Post Activity",
+                string.format(nameSpace.baseWowheadTradingPostActivityUrl, WowheadQuickLinkCfg.prefix, id, WowheadQuickLinkCfg.suffix)
+        end
+    end
+end
 
 function nameSpace.strategies.GetArmoryUrl(dataSources)
     if IsRetail() then
@@ -372,6 +382,10 @@ function strategies.wowheadAzEs.GetAzEsHyperlinkFromTooltip()
     end
 end
 
+function strategies.wowheadTradingPostActivity.GetTradingPostActivity(data)
+    if not IsRetail() or not (data.focus.activityName and data.focus.requirementsList) then return end
+    return data.focus.id
+end
 
 local function HookTooltip(tooltip)
     tooltipStates[tooltip] = {}
