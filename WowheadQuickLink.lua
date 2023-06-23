@@ -3,7 +3,7 @@ if IsRetail() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
 end
 if IsClassic() then
-    nameSpace.baseWowheadUrl = "https://%sclassic.wowhead.com/%s=%s%s"
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s"
 end
 if IsWrath() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/wotlk/%s=%s%s"
