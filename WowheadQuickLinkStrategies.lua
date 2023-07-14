@@ -216,16 +216,27 @@ end
 
 
 function strategies.wowhead.GetTrackerFromFocus(data)
-    if (data.focus.id and not data.focus.module) or not data.focus:GetParent() then return end
     local parent = data.focus:GetParent()
+    if (data.focus.id and not data.focus.module) or not parent then return end
     local id = data.focus.id or parent.id
+
+    -- handled in GetTradingPostActivityFromTracker because i'm not refactoring this right now
+    if parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE then
+        return
+    end
+
+    if parent.module == PROFESSION_RECIPE_TRACKER_MODULE then
+        return id, "spell"
+    end
+
     local focusName = data.focus:GetName()
     if parent.module == ACHIEVEMENT_TRACKER_MODULE or
-        (focusName ~= nil and string.find(focusName, "^AchievementFrameCriteria") ~= nil) or
+        (focusName and string.find(focusName, "^AchievementFrameCriteria")) or
         -- support Kaliel's Tracker
-        (data.focus.module ~= nil and data.focus.module.friendlyName == "ACHIEVEMENT_TRACKER_MODULE") then
+        (data.focus.module and data.focus.module.friendlyName == "ACHIEVEMENT_TRACKER_MODULE") then
         return id, "achievement"
     end
+
     return id, "quest"
 end
 
@@ -385,6 +396,11 @@ end
 function strategies.wowheadTradingPostActivity.GetTradingPostActivity(data)
     if not IsRetail() or not (data.focus.activityName and data.focus.requirementsList) then return end
     return data.focus.id
+end
+
+function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker(data)
+    local parent = data.focus:GetParent()
+    if (parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE and parent.id) then return parent.id end
 end
 
 local function HookTooltip(tooltip)
