@@ -127,6 +127,7 @@ local function GetFromLink(link)
     if not link then return end
     local _, _, type, id = link:find("%|?H?(%a+):(%d+):")
     if type == "azessence" then return id end
+    if type == "questie" then return id, "quest" end
     return id, type
 end
 
