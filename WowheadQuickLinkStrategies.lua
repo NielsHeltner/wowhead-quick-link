@@ -221,6 +221,22 @@ function strategies.wowhead.GetQuestFromQuestieTracker(data)
     return data.focus.Quest.Id, "quest"
 end
 
+function strategies.wowhead.GetRuneEnchantmentFromRuneFocus(data)
+    if not (IsClassic() and string.find(data.focus:GetName(), "EngravingFrameScrollFrameButton%d+")) then return end
+    local abilityID = data.focus.skillLineAbilityID
+
+    -- loop through all runes to find the one with the matching skillLineAbilityID
+    for _, category in ipairs(C_Engraving.GetRuneCategories(true, true)) do
+        for _, rune in ipairs(C_Engraving.GetRunesForCategory(category, true)) do
+
+            -- return the first spell ID from the list, couldn't find a better way to convert the skillLineAbilityID
+            -- to the rune
+            if rune.skillLineAbilityID == abilityID and #rune.learnedAbilitySpellIDs > 0 then
+                return rune.learnedAbilitySpellIDs[1], "spell"
+            end
+        end
+    end
+end
 
 function strategies.wowhead.GetTrackerFromFocus(data)
     local parent = data.focus:GetParent()
