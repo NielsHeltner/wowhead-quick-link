@@ -200,15 +200,21 @@ function strategies.wowhead.GetQuestFromFocus(data)
     return data.focus.questID, "quest"
 end
 
-
-function strategies.wowhead.GetQuestFromClassicLogFocus(data)
-    if not ((IsClassic() or IsWrath()) and data.focus.normalText and data.focus:GetID()) then return end
+function strategies.wowhead.GetQuestFromWrathLogTitleFocus(data)
+    if not (IsWrath() and string.find(data.focus:GetName(), "QuestLogListScrollFrameButton%d+")) then return end
     local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
     local questID = GetQuestIDFromLogIndex(questIndex)
     if questID == 0 then return end
     return questID, "quest"
 end
 
+function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
+    if not (IsClassic() and string.find(data.focus:GetName(), "QuestLogTitle%d+") and not data.focus.isHeader) then return end
+    local questIndex = data.focus:GetID()
+    local _, _, _, _, _, _, _, questID = GetQuestLogTitle(questIndex)
+    if questID == 0 then return end
+    return questID, "quest"
+end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
     if not ((IsClassic() or IsWrath()) and data.focus.Quest) then return end
