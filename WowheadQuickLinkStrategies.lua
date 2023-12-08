@@ -201,7 +201,7 @@ function strategies.wowhead.GetQuestFromFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromWrathLogTitleFocus(data)
-    if not (IsWrath() and string.find(data.focus:GetName(), "QuestLogListScrollFrameButton%d+")) then return end
+    if not (IsWrath() and CheckFrameName("QuestLogListScrollFrameButton%d+", data)) then return end
     local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
     local questID = GetQuestIDFromLogIndex(questIndex)
     if questID == 0 then return end
@@ -209,7 +209,7 @@ function strategies.wowhead.GetQuestFromWrathLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
-    if not (IsClassic() and string.find(data.focus:GetName(), "QuestLogTitle%d+") and not data.focus.isHeader) then return end
+    if not (IsClassic() and CheckFrameName("QuestLogTitle%d+", data) and not data.focus.isHeader) then return end
     local questIndex = data.focus:GetID()
     local _, _, _, _, _, _, _, questID = GetQuestLogTitle(questIndex)
     if questID == 0 then return end
@@ -221,8 +221,14 @@ function strategies.wowhead.GetQuestFromQuestieTracker(data)
     return data.focus.Quest.Id, "quest"
 end
 
+function strategies.wowhead.GetQuestFromQuestieFrame(data)
+    if not ((IsClassic() or IsWrath()) and CheckFrameName("QuestieFrame%d+", data)) then return end
+    if data.focus.data.QuestData then return data.focus.data.QuestData.Id, "quest" end
+    if data.focus.data.npcData then return data.focus.data.npcData.id, "npc" end
+end
+
 function strategies.wowhead.GetRuneEnchantmentFromRuneFocus(data)
-    if not (IsClassic() and string.find(data.focus:GetName(), "EngravingFrameScrollFrameButton%d+")) then return end
+    if not (IsClassic() and CheckFrameName("EngravingFrameScrollFrameButton%d+", data)) then return end
     local abilityID = data.focus.skillLineAbilityID
 
     -- loop through all runes to find the one with the matching skillLineAbilityID
@@ -424,6 +430,11 @@ end
 function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker(data)
     local parent = data.focus:GetParent()
     if (parent and parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE and parent.id) then return parent.id end
+end
+
+function CheckFrameName(name, data)
+    if not name or not data.focus or not data.focus:GetName() then return false end
+    return string.find(data.focus:GetName(), name)
 end
 
 local function HookTooltip(tooltip)
