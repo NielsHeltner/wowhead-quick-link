@@ -53,8 +53,8 @@ function IsClassic()
 end
 
 
-function IsWrath()
-    return WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+function IsCata()
+    return WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 end
 
 

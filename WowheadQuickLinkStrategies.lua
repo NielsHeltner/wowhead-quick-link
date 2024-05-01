@@ -166,7 +166,7 @@ end
 -- data type ID comes from the TooltipDataType enum in blizzard's lua:
 -- https://github.com/Gethe/wow-ui-source/blob/live/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
 function strategies.wowhead.GetMountOrToyFromTooltip(data)
-    if not IsRetail() or not data.tooltip then return end
+    if not (IsRetail() or IsCata()) or not data.tooltip then return end
     tooltipData = data.tooltip:GetTooltipData()
     if not tooltipData then return end
 
@@ -200,8 +200,8 @@ function strategies.wowhead.GetQuestFromFocus(data)
     return data.focus.questID, "quest"
 end
 
-function strategies.wowhead.GetQuestFromWrathLogTitleFocus(data)
-    if not (IsWrath() and CheckFrameName("QuestLogListScrollFrameButton%d+", data)) then return end
+function strategies.wowhead.GetQuestFromCataLogTitleFocus(data)
+    if not (IsCata() and CheckFrameName("QuestLogListScrollFrameButton%d+", data)) then return end
     local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
     local questID = GetQuestIDFromLogIndex(questIndex)
     if questID == 0 then return end
@@ -217,12 +217,12 @@ function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsWrath()) and data.focus.Quest) then return end
+    if not ((IsClassic() or IsCata()) and data.focus.Quest) then return end
     return data.focus.Quest.Id, "quest"
 end
 
 function strategies.wowhead.GetQuestFromQuestieFrame(data)
-    if not ((IsClassic() or IsWrath()) and CheckFrameName("QuestieFrame%d+", data)) then return end
+    if not ((IsClassic() or IsCata()) and CheckFrameName("QuestieFrame%d+", data)) then return end
     if data.focus.data.QuestData then return data.focus.data.QuestData.Id, "quest" end
     if data.focus.data.npcData then return data.focus.data.npcData.id, "npc" end
 end
@@ -317,7 +317,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not (IsClassic() or IsWrath()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
+    if not (IsClassic() or IsCata()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)

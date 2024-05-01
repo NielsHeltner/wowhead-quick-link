@@ -5,8 +5,8 @@ end
 if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s"
 end
-if IsWrath() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/wotlk/%s=%s%s"
+if IsCata() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/cata/%s=%s%s"
 end
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseWowheadTradingPostActivityUrl = "https://%swowhead.com/trading-post-activity/%s%s"
