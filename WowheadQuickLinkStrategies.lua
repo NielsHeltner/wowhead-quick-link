@@ -166,7 +166,7 @@ end
 -- data type ID comes from the TooltipDataType enum in blizzard's lua:
 -- https://github.com/Gethe/wow-ui-source/blob/live/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
 function strategies.wowhead.GetMountOrToyFromTooltip(data)
-    if not (IsRetail() or IsCata()) or not data.tooltip then return end
+    if not (IsRetail() or IsCata()) or not data.tooltip.GetTooltipData then return end
     tooltipData = data.tooltip:GetTooltipData()
     if not tooltipData then return end
 
@@ -200,12 +200,16 @@ function strategies.wowhead.GetQuestFromFocus(data)
     return data.focus.questID, "quest"
 end
 
-function strategies.wowhead.GetQuestFromCataLogTitleFocus(data)
-    if not (IsCata() and CheckFrameName("QuestLogListScrollFrameButton%d+", data)) then return end
-    local questIndex = data.focus:GetID() + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
-    local questID = GetQuestIDFromLogIndex(questIndex)
-    if questID == 0 then return end
-    return questID, "quest"
+function strategies.wowhead.GetFromCataWatchTitleFocus(data)
+    if not (IsCata() and data.focus.index and data.focus.type) then return end
+    if data.focus.type == "QUEST" then
+        local logIndex = GetQuestIndexForWatch(data.focus.index)
+        local questID = select(8, GetQuestLogTitle(logIndex))
+        if questID == 0 then return end
+        return questID, "quest"
+    elseif data.focus.type == "ACHIEVEMENT" then
+        return data.focus.index, "achievement"
+    end
 end
 
 function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
