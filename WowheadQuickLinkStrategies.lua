@@ -433,7 +433,7 @@ end
 
 function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker(data)
     local parent = data.focus:GetParent()
-    if (parent and parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE and parent.id) then return parent.id end
+    if (parent and parent.module and parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE and parent.id) then return parent.id end
 end
 
 function CheckFrameName(name, data)
