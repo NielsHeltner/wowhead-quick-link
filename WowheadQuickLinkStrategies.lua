@@ -250,27 +250,28 @@ end
 
 function strategies.wowhead.GetTrackerFromFocus(data)
     local parent = data.focus:GetParent()
-    if (data.focus.id and not data.focus.module) or not parent then return end
-    local id = data.focus.id or parent.id
+    if not parent or not parent.parentModule then return end
+    local name = parent.parentModule:GetName()
 
-    -- handled in GetTradingPostActivityFromTracker because i'm not refactoring this right now
-    if parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE then
+    if parent.poiQuestID then
+        return parent.poiQuestID, "quest"
+    end
+
+    -- handled in GetTradingPostActivityFromTracker because i'm still not refactoring this right now
+    if name == "MonthlyActivitiesObjectiveTracker" then
         return
     end
 
-    if parent.module == PROFESSION_RECIPE_TRACKER_MODULE then
-        return id, "spell"
+    if name == "ProfessionsRecipeTracker" then
+        return parent.id, "spell"
     end
 
     local focusName = data.focus:GetName()
-    if parent.module == ACHIEVEMENT_TRACKER_MODULE or
-        (focusName and string.find(focusName, "^AchievementFrameCriteria")) or
+    if name == "AchievementObjectiveTracker" or
         -- support Kaliel's Tracker
         (data.focus.module and data.focus.module.friendlyName == "ACHIEVEMENT_TRACKER_MODULE") then
-        return id, "achievement"
+        return parent.id, "achievement"
     end
-
-    return id, "quest"
 end
 
 
@@ -433,7 +434,7 @@ end
 
 function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker(data)
     local parent = data.focus:GetParent()
-    if (parent and parent.module and parent.module == MONTHLY_ACTIVITIES_TRACKER_MODULE and parent.id) then return parent.id end
+    if (parent and parent.parentModule and parent.parentModule:GetName() == "MonthlyActivitiesObjectiveTracker" and parent.id) then return parent.id end
 end
 
 function CheckFrameName(name, data)
@@ -456,7 +457,14 @@ local function HookTooltip(tooltip)
     end
 
     hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
-        tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
+        if IsRetail() then
+            local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
+            if aura then
+                tooltipStates[tooltip].aura = aura.spellId
+            end
+        else
+            tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
+        end
     end)
 
     tooltip:HookScript("OnTooltipCleared", function(tooltip)
