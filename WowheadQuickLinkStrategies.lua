@@ -378,8 +378,14 @@ function strategies.wowhead.GetClassicCataFactionFromFocus(data)
 end
 
 
-function strategies.wowhead.GetCurrencyInTabFromFocus(data)
-    if data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil) then return end
+function strategies.wowhead.GetRetailCurrencyInTabFromFocus(data)
+    if not IsRetail() or not data.focus.elementData or not data.focus.elementData.currencyID then return end
+    return data.focus.elementData.currencyID, "currency"
+end
+
+
+function strategies.wowhead.GetClassicCataCurrencyInTabFromFocus(data)
+    if IsRetail() or (data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil)) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
     return GetFromLink(link)
