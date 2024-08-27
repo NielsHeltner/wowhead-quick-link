@@ -366,8 +366,14 @@ function strategies.wowhead.GetRecipeFromFocus(data)
 end
 
 
-function strategies.wowhead.GetFactionFromFocus(data)
-    if not data.focus.index or not data.focus.standingText then return end
+function strategies.wowhead.GetRetailFactionFromFocus(data)
+    if not IsRetail() or not data.focus or not data.focus.factionID then return end
+    return data.focus.factionID, "faction"
+end
+
+
+function strategies.wowhead.GetClassicCataFactionFromFocus(data)
+    if IsRetail() or not data.focus.index or not data.focus.standingText then return end
     return select(14, GetFactionInfo(data.focus.index)), "faction"
 end
 
