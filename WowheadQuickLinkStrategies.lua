@@ -275,6 +275,12 @@ function strategies.wowhead.GetTrackerFromFocus(data)
 end
 
 
+function strategies.wowhead.GetClassicQuestLog(data)
+    if not IsRetail() or not data.focus.info or not data.focus.info.questID then return end
+    return data.focus.info.questID, "quest"
+end
+
+
 function strategies.wowhead.GetNpcFromTooltip(data)
     if not data.tooltip then return end
     local _, unit = data.tooltip:GetUnit()
