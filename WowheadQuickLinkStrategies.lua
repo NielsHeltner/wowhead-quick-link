@@ -265,6 +265,10 @@ function strategies.wowhead.GetTrackerFromFocus(data)
         return parent.poiQuestID, "quest"
     end
 
+    if name == "BonusObjectiveTracker" then
+        return parent.id, "quest"
+    end
+
     -- handled in GetTradingPostActivityFromTracker because i'm still not refactoring this right now
     if name == "MonthlyActivitiesObjectiveTracker" then
         return
