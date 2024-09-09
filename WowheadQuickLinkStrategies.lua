@@ -150,6 +150,14 @@ function strategies.wowhead.GetAuraFromTooltip()
 end
 
 
+function strategies.wowhead.GetAuraFromInstanceID(data)
+    if not data.focus.auraInstanceID or not data.focus.unit then return end
+    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(data.focus.unit, data.focus.auraInstanceID)
+    if not aura then return end
+    return aura.spellId, "spell"
+end
+
+
 function strategies.wowhead.GetItemFromTooltip(data)
     if not data.tooltip then return end
     local _, link = data.tooltip:GetItem()
