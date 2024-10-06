@@ -33,7 +33,7 @@ end
 
 local function GetDataSources()
     local focus = nil
-    if IsRetail() then
+    if IsRetail() or IsClassic() then
         focus = GetMouseFoci()[1]
     else
         focus = GetMouseFocus()
