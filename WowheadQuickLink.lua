@@ -32,12 +32,7 @@ local function CreateUrl(dataSources, strategies)
 end
 
 local function GetDataSources()
-    local focus = nil
-    if IsRetail() or IsClassic() then
-        focus = GetMouseFoci()[1]
-    else
-        focus = GetMouseFocus()
-    end
+    local focus = GetMouseFoci()[1]
     local tooltip = GameTooltip
     return {focus = focus, tooltip = tooltip}
 end
