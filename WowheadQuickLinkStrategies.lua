@@ -117,7 +117,7 @@ end
 
 
 function strategies.armory.GetArmoryFromLfgApplicant(data)
-    if not data.focus.memberIdx or not data.focus:GetParent() or not data.focus:GetParent().applicantID then return end
+    if not data.focus.memberIdx or not data.focus.GetParent or not data.focus:GetParent().applicantID then return end
     local applicant = select(1, C_LFGList.GetApplicantMemberInfo(data.focus:GetParent().applicantID, data.focus.memberIdx))
     return GetFromNameAndRealm(strsplit("-", applicant))
 end
@@ -229,7 +229,7 @@ function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsCata()) and data.focus.Quest) then return end
+    if not ((IsClassic() or IsCata()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
     return data.focus.Quest.Id, "quest"
 end
 
@@ -257,6 +257,8 @@ function strategies.wowhead.GetRuneEnchantmentFromRuneFocus(data)
 end
 
 function strategies.wowhead.GetTrackerFromFocus(data)
+    if not data.focus.GetParent then return end
+
     local parent = data.focus:GetParent()
     if not parent or not parent.parentModule then return end
     local name = parent.parentModule:GetName()
@@ -314,7 +316,8 @@ end
 
 
 function strategies.wowhead.GetBattlePetFromFocus(data)
-    if not data.focus.petID and (not data.focus:GetParent() or not data.focus:GetParent().petID) then return end
+    if not IsRetail() then return end
+    if not data.focus.petID and (not data.focus.GetParent or not data.focus:GetParent().petID) then return end
     local petId = data.focus.petID or data.focus:GetParent().petID
     local id
     if type(petId) == "string" then
@@ -340,7 +343,8 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not (IsClassic() or IsCata()) or (not data.focus.itemIndex and (not data.focus:GetParent() or not data.focus:GetParent().itemIndex)) then return end
+    if not (IsClassic() or IsCata()) then return end
+    if not data.focus.itemIndex or (not data.focus.GetParent and not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
     local id, type = GetFromLink(link)
@@ -403,7 +407,7 @@ end
 
 
 function strategies.wowhead.GetClassicCataCurrencyInTabFromFocus(data)
-    if IsRetail() or (data.focus.isUnused == nil and (not data.focus:GetParent() or data.focus:GetParent().isUnused == nil)) then return end
+    if IsRetail() or (data.focus.isUnused == nil or (not data.focus.GetParent and data.focus:GetParent().isUnused == nil)) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
     return GetFromLink(link)
@@ -463,6 +467,8 @@ function strategies.wowheadTradingPostActivity.GetTradingPostActivity(data)
 end
 
 function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker(data)
+    if not data.focus.GetParent then return end
+
     local parent = data.focus:GetParent()
     if (parent and parent.parentModule and parent.parentModule:GetName() == "MonthlyActivitiesObjectiveTracker" and parent.id) then return parent.id end
 end
