@@ -5,9 +5,6 @@ end
 if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s"
 end
-if IsCata() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/cata/%s=%s%s"
-end
 if IsMop() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s"
 end

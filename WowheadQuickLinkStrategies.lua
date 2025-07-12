@@ -174,7 +174,7 @@ end
 -- data type ID comes from the TooltipDataType enum in blizzard's lua:
 -- https://github.com/Gethe/wow-ui-source/blob/live/Interface/AddOns/Blizzard_APIDocumentationGenerated/TooltipInfoSharedDocumentation.lua
 function strategies.wowhead.GetMountOrToyFromTooltip(data)
-    if not (IsRetail() or IsCata()) or not data.tooltip.GetTooltipData then return end
+    if not (IsRetail() or IsMop()) or not data.tooltip.GetTooltipData then return end
     tooltipData = data.tooltip:GetTooltipData()
     if not tooltipData then return end
 
@@ -208,8 +208,8 @@ function strategies.wowhead.GetQuestFromFocus(data)
     return data.focus.questID, "quest"
 end
 
-function strategies.wowhead.GetFromCataWatchTitleFocus(data)
-    if not (IsCata() and data.focus.index and data.focus.type) then return end
+function strategies.wowhead.GetFromMistsWatchTitleFocus(data)
+    if not (IsMop() and data.focus.index and data.focus.type) then return end
     if data.focus.type == "QUEST" then
         local logIndex = GetQuestIndexForWatch(data.focus.index)
         local questID = select(8, GetQuestLogTitle(logIndex))
@@ -229,12 +229,12 @@ function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsCata()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
+    if not ((IsClassic() or IsMop()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
     return data.focus.Quest.Id, "quest"
 end
 
 function strategies.wowhead.GetQuestFromQuestieFrame(data)
-    if not ((IsClassic() or IsCata()) and CheckFrameName("QuestieFrame%d+", data)) then return end
+    if not ((IsClassic() or IsMop()) and CheckFrameName("QuestieFrame%d+", data)) then return end
     if data.focus.data.QuestData then return data.focus.data.QuestData.Id, "quest" end
     if data.focus.data.npcData then return data.focus.data.npcData.id, "npc" end
 end
@@ -317,7 +317,14 @@ end
 
 function strategies.wowhead.GetBattlePetFromFocus(data)
     if not IsRetail() then return end
-    if not data.focus.petID and (not data.focus.GetParent or not data.focus:GetParent().petID) then return end
+
+    if not (data and data.focus) then return end
+    if not data.focus.petID then
+        if not (data.focus.GetParent and type(data.focus.GetParent) == "function") then return end
+        local parent = data.focus:GetParent()
+        if not (parent and parent.petID) then return end
+    end
+
     local petId = data.focus.petID or data.focus:GetParent().petID
     local id
     if type(petId) == "string" then
@@ -343,7 +350,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not (IsClassic() or IsCata()) then return end
+    if not (IsClassic() or IsMop()) then return end
     if not data.focus.itemIndex or (not data.focus.GetParent and not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)
@@ -394,7 +401,7 @@ function strategies.wowhead.GetRetailFactionFromFocus(data)
 end
 
 
-function strategies.wowhead.GetClassicCataFactionFromFocus(data)
+function strategies.wowhead.GetClassicMistsFactionFromFocus(data)
     if IsRetail() or not data.focus.index or not data.focus.standingText then return end
     return select(14, GetFactionInfo(data.focus.index)), "faction"
 end
@@ -406,7 +413,7 @@ function strategies.wowhead.GetRetailCurrencyInTabFromFocus(data)
 end
 
 
-function strategies.wowhead.GetClassicCataCurrencyInTabFromFocus(data)
+function strategies.wowhead.GetClassicMistsCurrencyInTabFromFocus(data)
     if IsRetail() or (data.focus.isUnused == nil or (not data.focus.GetParent and data.focus:GetParent().isUnused == nil)) then return end
     local index = data.focus.index or data.focus:GetParent().index
     local link = C_CurrencyInfo.GetCurrencyListLink(index)
@@ -474,7 +481,7 @@ function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker
 end
 
 function CheckFrameName(name, data)
-    if not name or not data.focus or not data.focus:GetName() then return false end
+    if not name or not data.focus or not data.focus.GetName then return false end
     return string.find(data.focus:GetName(), name)
 end
 

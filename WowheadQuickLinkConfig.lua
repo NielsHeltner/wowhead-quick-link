@@ -53,11 +53,6 @@ function IsClassic()
 end
 
 
-function IsCata()
-    return WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
-end
-
-
 function IsMop()
     return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
 end
