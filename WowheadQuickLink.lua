@@ -8,6 +8,10 @@ end
 if IsCata() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/cata/%s=%s%s"
 end
+if IsMop() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s"
+end
+
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseWowheadTradingPostActivityUrl = "https://%swowhead.com/trading-post-activity/%s%s"
 nameSpace.baseArmoryUrl = "https://worldofwarcraft.com/%s/character/%s/%s"

@@ -58,6 +58,10 @@ function IsCata()
 end
 
 
+function IsMop()
+    return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
+end
+
 local function Hide()
     WowheadQuickLinkConfig_Frame:Hide()
 end
