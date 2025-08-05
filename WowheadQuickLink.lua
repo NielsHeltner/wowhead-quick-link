@@ -58,14 +58,14 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
     button1 = "Close",
     OnShow = function(self, data)
         local function HidePopup(self) self:GetParent():Hide() end
-        self.editBox:SetScript("OnEscapePressed", HidePopup)
-        self.editBox:SetScript("OnEnterPressed", HidePopup)
-        self.editBox:SetScript("OnKeyUp", function(self, key)
+        self.EditBox:SetScript("OnEscapePressed", HidePopup)
+        self.EditBox:SetScript("OnEnterPressed", HidePopup)
+        self.EditBox:SetScript("OnKeyUp", function(self, key)
             if IsControlKeyDown() and key == "C" then HidePopup(self) end
         end)
-        self.editBox:SetMaxLetters(0)
-        self.editBox:SetText(data)
-        self.editBox:HighlightText()
+        self.EditBox:SetMaxLetters(0)
+        self.EditBox:SetText(data)
+        self.EditBox:HighlightText()
     end,
     hasEditBox = true,
     editBoxWidth = 240,
