@@ -481,7 +481,7 @@ function strategies.wowheadTradingPostActivity.GetTradingPostActivityFromTracker
 end
 
 function CheckFrameName(name, data)
-    if not name or not data.focus or not data.focus.GetName then return false end
+    if not name or not data.focus or not data.focus.GetName or not data.focus:GetName() then return false end
     return string.find(data.focus:GetName(), name)
 end
 
