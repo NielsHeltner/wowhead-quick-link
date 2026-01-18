@@ -221,7 +221,7 @@ function strategies.wowhead.GetFromMistsWatchTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
-    if not (IsClassic() and CheckFrameName("QuestLogTitle%d+", data) and not data.focus.isHeader) then return end
+    if not ((IsClassic() or IsBCC()) and CheckFrameName("QuestLogTitle%d+", data) and not data.focus.isHeader) then return end
     local questIndex = data.focus:GetID()
     local _, _, _, _, _, _, _, questID = GetQuestLogTitle(questIndex)
     if questID == 0 then return end
@@ -229,12 +229,12 @@ function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsMop()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
+    if not ((IsClassic() or IsBCC() or IsMop()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
     return data.focus.Quest.Id, "quest"
 end
 
 function strategies.wowhead.GetQuestFromQuestieFrame(data)
-    if not ((IsClassic() or IsMop()) and CheckFrameName("QuestieFrame%d+", data)) then return end
+    if not ((IsClassic() or IsBCC() or IsMop()) and CheckFrameName("QuestieFrame%d+", data)) then return end
     if data.focus.data.QuestData then return data.focus.data.QuestData.Id, "quest" end
     if data.focus.data.npcData then return data.focus.data.npcData.id, "npc" end
 end
@@ -350,7 +350,7 @@ end
 
 
 function strategies.wowhead.GetItemFromAuctionHouseClassic(data)
-    if not (IsClassic() or IsMop()) then return end
+    if not (IsClassic() or IsBCC() or IsMop()) then return end
     if not data.focus.itemIndex or (not data.focus.GetParent and not data.focus:GetParent().itemIndex) then return end
     local index = data.focus.itemIndex or data.focus:GetParent().itemIndex
     local link = GetAuctionItemLink("list", index)

@@ -1,6 +1,7 @@
 ## Interface: 110200
-## Interface-Mists: 50500
 ## Interface-Classic: 11507
+## Interface-BCC: 20505
+## Interface-Mists: 50500
 ## Version: 2.16.10
 ## Title: Wowhead Quick Link
 ## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
