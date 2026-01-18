@@ -5,6 +5,9 @@ end
 if IsClassic() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s"
 end
+if IsBCC() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/tbc/%s=%s%s"
+end
 if IsMop() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s"
 end
@@ -58,13 +61,11 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
     button1 = "Close",
     OnShow = function(self, data)
         local function HidePopup(self) self:GetParent():Hide() end
-        local editBox
+        
+        -- Changed from "if (IsRetail() or IsMop() or IsClassic()) then" to this to make it version agnostic
+        local editBox = self.EditBox or self.editBox
+        if not editBox then return end
 
-        if (IsRetail() or IsMop() or IsClassic()) then
-            editBox = self.EditBox
-        else
-            editBox = self.editBox
-        end
         editBox:SetScript("OnEscapePressed", HidePopup)
         editBox:SetScript("OnEnterPressed", HidePopup)
         editBox:SetScript("OnKeyUp", function(self, key)
