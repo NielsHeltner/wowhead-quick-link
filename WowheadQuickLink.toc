@@ -1,4 +1,4 @@
-## Interface: 110200
+## Interface: 120001
 ## Interface-Classic: 11507
 ## Interface-BCC: 20505
 ## Interface-Mists: 50500
