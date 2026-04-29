@@ -69,7 +69,12 @@ StaticPopupDialogs["WowheadQuickLinkUrl"] = {
         editBox:SetScript("OnEscapePressed", HidePopup)
         editBox:SetScript("OnEnterPressed", HidePopup)
         editBox:SetScript("OnKeyUp", function(self, key)
-            if IsControlKeyDown() and key == "C" then HidePopup(self) end
+            if
+                (IsControlKeyDown() and key == "C")
+                or (IsKeyDown("C") and (key == "LCTRL" or key == "RCTRL"))
+            then
+                HidePopup(self)
+            end
         end)
         editBox:SetMaxLetters(0)
         editBox:SetText(data)
