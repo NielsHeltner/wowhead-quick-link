@@ -1,15 +1,15 @@
 local addonName, nameSpace = ...
 if IsRetail() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s"
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/%s=%s%s#comments"
 end
 if IsClassic() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s"
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/classic/%s=%s%s#comments"
 end
 if IsBCC() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/tbc/%s=%s%s"
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/tbc/%s=%s%s#comments"
 end
 if IsMop() then
-    nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s"
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s#comments"
 end
 
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
