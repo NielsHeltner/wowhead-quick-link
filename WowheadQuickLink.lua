@@ -11,6 +11,9 @@ end
 if IsMop() then
     nameSpace.baseWowheadUrl = "https://%swowhead.com/mop-classic/%s=%s%s"
 end
+if IsForever() then
+    nameSpace.baseWowheadUrl = "https://%swowhead.com/forever/%s=%s%s"
+end
 
 nameSpace.baseWowheadAzEsUrl = "https://%swowhead.com/azerite-essence/%s%s"
 nameSpace.baseWowheadTradingPostActivityUrl = "https://%swowhead.com/trading-post-activity/%s%s"
