@@ -8,6 +8,9 @@ local strategies = {
     armory = {}
 }
 local tooltipStates = {}
+local function IsSecret(value)
+    return issecretvalue and issecretvalue(value)
+end
 local regions = {
     [1] = "us",
     [2] = "kr",
@@ -55,7 +58,7 @@ function nameSpace.strategies.GetWowheadTradingPostActivityUrl(dataSources)
 end
 
 function nameSpace.strategies.GetArmoryUrl(dataSources)
-    if IsRetail() then
+    if IsRetail() and not IsForever() then
         for _, strategy in pairs(strategies.armory) do
             local _, locale, realm, name = strategy(dataSources)
             if locale and realm and name then
@@ -67,7 +70,7 @@ end
 
 
 function nameSpace.altStrategies.GetRaiderIoUrl(dataSources)
-    if IsRetail() then
+    if IsRetail() and not IsForever() then
         for _, strategy in pairs(strategies.armory) do
             local region, _, realm, name = strategy(dataSources)
             if region and realm and name then
@@ -153,7 +156,7 @@ end
 function strategies.wowhead.GetAuraFromInstanceID(data)
     if not data.focus.auraInstanceID or not data.focus.unit then return end
     local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(data.focus.unit, data.focus.auraInstanceID)
-    if not aura then return end
+    if not aura or IsSecret(aura.spellId) then return end
     return aura.spellId, "spell"
 end
 
@@ -229,12 +232,12 @@ function strategies.wowhead.GetQuestFromClassicLogTitleFocus(data)
 end
 
 function strategies.wowhead.GetQuestFromQuestieTracker(data)
-    if not ((IsClassic() or IsBCC() or IsMop()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
+    if not ((IsClassic() or IsBCC() or IsMop() or IsForever()) and data.focus.Quest and type(data.focus.Quest) == "table") then return end
     return data.focus.Quest.Id, "quest"
 end
 
 function strategies.wowhead.GetQuestFromQuestieFrame(data)
-    if not ((IsClassic() or IsBCC() or IsMop()) and CheckFrameName("QuestieFrame%d+", data)) then return end
+    if not ((IsClassic() or IsBCC() or IsMop() or IsForever()) and CheckFrameName("QuestieFrame%d+", data)) then return end
     if data.focus.data.QuestData then return data.focus.data.QuestData.Id, "quest" end
     if data.focus.data.npcData then return data.focus.data.npcData.id, "npc" end
 end
@@ -298,8 +301,10 @@ end
 function strategies.wowhead.GetNpcFromTooltip(data)
     if not data.tooltip then return end
     local _, unit = data.tooltip:GetUnit()
-    if not unit then return end
-    return select(6, strsplit("-", UnitGUID(unit))), "npc"
+    if not unit or IsSecret(unit) then return end
+    local guid = UnitGUID(unit)
+    if not guid or IsSecret(guid) then return end
+    return select(6, strsplit("-", guid)), "npc"
 end
 
 
@@ -491,7 +496,7 @@ local function HookTooltip(tooltip)
         tooltipStates[tooltip].hyperlink = hyperlink
     end)
 
-    if IsRetail() then
+    if IsRetail() and tooltip.SetRecipeReagentItem then
         hooksecurefunc(tooltip, "SetRecipeReagentItem", function(tooltip, recipeId, reagentIndex)
             if C_TradeSkillUI.GetRecipeReagentItemLink then
                 tooltipStates[tooltip].hyperlink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeId, reagentIndex)
@@ -499,16 +504,16 @@ local function HookTooltip(tooltip)
         end)
     end
 
-    hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
+    if tooltip.SetUnitAura then hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
         if IsRetail() then
             local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
-            if aura then
+            if aura and not IsSecret(aura.spellId) then
                 tooltipStates[tooltip].aura = aura.spellId
             end
         else
             tooltipStates[tooltip].aura = select(10, UnitAura(unit, index, filter))
         end
-    end)
+    end) end
 
     tooltip:HookScript("OnTooltipCleared", function(tooltip)
         tooltipStates[tooltip] = {}

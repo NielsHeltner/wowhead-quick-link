@@ -1,0 +1,24 @@
+## Interface: 16001
+## Version: 2.16.10
+## Title: Wowhead Quick Link
+## Notes: Mouse over and press CTRL-C on (almost) anything to generate a Wowhead link.
+## Author: Blur
+## SavedVariables: WowheadQuickLinkCfg
+## X-Curse-Project-ID: 326804
+## Category-enUS: Other
+## Category-deDE: Anderes
+## Category-esES: Otros
+## Category-esMX: Otros
+## Category-frFR: Autre
+## Category-itIT: Altro
+## Category-koKR: 기타
+## Category-ptBR: Outro
+## Category-ruRU: Другое
+## Category-zhCN: 其它
+## Category-zhTW: 其他
+
+WowheadQuickLinkConfig.xml
+WowheadQuickLinkConfig.lua
+
+WowheadQuickLinkStrategies.lua
+WowheadQuickLink.lua

@@ -62,6 +62,13 @@ function IsMop()
     return WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
 end
 
+
+-- WoW Forever runs on the retail client (same WOW_PROJECT_ID), so tell it apart by interface version
+function IsForever()
+    local toc = select(4, GetBuildInfo())
+    return toc >= 16000 and toc < 20000
+end
+
 local function Hide()
     WowheadQuickLinkConfig_Frame:Hide()
 end
