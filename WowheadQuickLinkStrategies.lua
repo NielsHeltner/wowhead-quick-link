@@ -155,8 +155,8 @@ end
 
 function strategies.wowhead.GetAuraFromInstanceID(data)
     if not data.focus.auraInstanceID or not data.focus.unit then return end
-    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(data.focus.unit, data.focus.auraInstanceID)
-    if not aura or IsSecret(aura.spellId) then return end
+    local ok, aura = pcall(C_UnitAuras.GetAuraDataByAuraInstanceID, data.focus.unit, data.focus.auraInstanceID)
+    if not ok or not aura or IsSecret(aura.spellId) then return end
     return aura.spellId, "spell"
 end
 
@@ -506,8 +506,9 @@ local function HookTooltip(tooltip)
 
     if tooltip.SetUnitAura then hooksecurefunc(tooltip, "SetUnitAura", function(tooltip, unit, index, filter)
         if IsRetail() then
-            local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, filter)
-            if aura and not IsSecret(aura.spellId) then
+            -- Auras can't be read while secret in a tainted context; skip instead of erroring
+            local ok, aura = pcall(C_UnitAuras.GetAuraDataByIndex, unit, index, filter)
+            if ok and aura and not IsSecret(aura.spellId) then
                 tooltipStates[tooltip].aura = aura.spellId
             end
         else
